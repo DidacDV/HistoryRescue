@@ -1,0 +1,3 @@
+Take out game logic outside moveObject4 file
+Add support for multiple levels
+If player falls off the map, restart in same level (maybe set an initial position and use it?)
