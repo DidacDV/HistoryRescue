@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapCreation
   map: {fileID: 4900000, guid: 28cf6d1fb1568cb4bb508f4e3e9d31dc, type: 3}
   tile: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
-  VictoryTile: {fileID: 7761140359684795549, guid: dd39608fecc7e7344b27fff9401f3372, type: 3}
+  VictoryHole: {fileID: 9056098295603682663, guid: bc053125464e1894baf51c326bd06394, type: 3}
 --- !u!4 &335594040
 Transform:
   m_ObjectHideFlags: 0
@@ -552,6 +552,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6588f78fcb7456f4ab7840b863429068, type: 3}
   - {fileID: 8300000, guid: 6ac4dc07db529eb4fb121643c48573ea, type: 3}
   fallSound: {fileID: 8300000, guid: 6bdc6de39c0314b4eb1b1ab0e21ad992, type: 3}
+  victorySound: {fileID: 0}
 --- !u!1 &1807744663 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 455a3cebd469723459daa62c7f058ac6, type: 3}
