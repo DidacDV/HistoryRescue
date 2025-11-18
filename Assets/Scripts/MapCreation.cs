@@ -10,7 +10,7 @@ public class MapCreation : MonoBehaviour
 {
     public TextAsset map; 		// Text file containing the map
     public GameObject tile; 	// Tile prefab used to instance and build the level
-
+    public GameObject VictoryHole; //if stepped into, level is passed
     // Start is called once after the MonoBehaviour is created
     void Start()
     {
@@ -43,6 +43,22 @@ public class MapCreation : MonoBehaviour
 					
 					// Set the new object parent to be the game object containing this script
                     obj.transform.parent = transform;
+                }
+                else if (nums[z * sizeX + x + 2] == 3) {
+                    // Instantiate victory hole (no tile, just a trigger zone)
+                    GameObject obj = Instantiate(VictoryHole != null ? VictoryHole : tile,
+                                                  new Vector3(x, -0.5f, z),
+                                                  transform.rotation);
+                    obj.transform.parent = transform;
+
+                    // Make sure it has the VictoryHole tag and is a trigger
+                    obj.tag = "LevelPass";
+
+                    // Ensure it has a collider set as trigger
+                    Collider col = obj.GetComponent<Collider>();
+                    if (col != null) {
+                        col.isTrigger = true;
+                    }
                 }
             }
     }

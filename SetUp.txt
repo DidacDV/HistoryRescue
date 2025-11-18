@@ -1,0 +1,7 @@
+idk if git uploads the prefab, if not:
+create game object
+put tag LevelPassed
+enable isTrigger
+drag the prefab to the mapCreation VictoryHole
+mark 3 in each map.txt as the victory hole
+if enter victory hole, a "level passed" should appear
