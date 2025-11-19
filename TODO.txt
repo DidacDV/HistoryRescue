@@ -1,3 +1,11 @@
-Take out game logic outside moveObject4 file
-Add support for multiple levels
-If player falls off the map, restart in same level (maybe set an initial position and use it?)
+Take out game logic outside moveObject4 file DONE
+Add support for multiple levels DONE
+If player falls off the map, restart in same level (maybe set an initial position and use it?) DONE using initial postion, set with tile 4 in txt
+Add count of movements (should be quick&easy)
+Add simple main menu scene DONE prototype version, just to verify the functionality
+Add simple winning scene
+Add UI for count of movements and current level
+Modify cube to be 2x1
+Add all bloxorz movements to the cube
+Add animations when passsing level (as the enunciat says, following the bloxorz one)
+Add animations when failing level (as the enunciat says, following the bloxorz one)

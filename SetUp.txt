@@ -5,3 +5,8 @@ enable isTrigger
 drag the prefab to the mapCreation VictoryHole
 mark 3 in each map.txt as the victory hole
 if enter victory hole, a "level passed" should appear
+
+Inspiration to adding same script (LevelManager) to multiple scenes:
+Or that you are doing the same thing with adjusted parameters (Scene 1 - spawn 2 players after 5 seconds. Scene 2 - Spawn 1 player after 3 seconds).
+The latter should be solvable by attaching the same script to a gameobject in each scene and adjusting variables in the inspector, as was suggested.
+(https://discussions.unity.com/t/reusing-scripts-across-scenes/564636/5)

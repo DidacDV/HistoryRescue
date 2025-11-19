@@ -1,0 +1,3 @@
+Created game and level managers
+Event-driven Architecture: player calls for events, level manager is listening for them
+Singleton Pattern for game manager

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
@@ -8,7 +9,7 @@ using UnityEngine.InputSystem;
 // Victory condition: cube must be standing upright and fall into the victory hole.
 
 
-public class MoveCube : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
     InputAction moveAction; 		// Input action to capture player movement (WASD + cursor keys)
 
     bool bMoving = false;           // Is the object in the middle of moving?
@@ -27,7 +28,9 @@ public class MoveCube : MonoBehaviour {
     public AudioClip fallSound; 	// Sound to play when the cube starts falling
     public AudioClip victorySound;  // Sound to play when level is passed
 
-
+    public UnityEvent OnFellOff;
+    public UnityEvent OnReachedVictoryHole;
+    bool bEventFired = false;  //prevent multiple event of levelpass
     // Determine if the cube is standing upright (vertical orientation) to recreate bloxorz o como se diga
     bool IsStandingUpright() {
         //actual logic should go here
@@ -72,16 +75,14 @@ public class MoveCube : MonoBehaviour {
         }
     }
 
-    void onFallOff() {
-        if (!bLevelPassed) {
-            Debug.Log("FELL OFF THE MAP, YOU LOSE!");
-            //reset level
+    void HandleFalling() {
+        if (!bEventFired && transform.position.y < -5.0f) {
+            bEventFired = true;
+            if (bLevelPassed)
+                OnReachedVictoryHole?.Invoke();
+            else
+                OnFellOff?.Invoke();
         }
-    }
-
-    void onLevelPass() {
-        Debug.Log("LEVEL PASSED!");
-        //next level
     }
 
     //Start is called once after the MonoBehaviour is created
@@ -100,13 +101,7 @@ public class MoveCube : MonoBehaviour {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
 
             if (transform.position.y < -5.0f) {
-                // triggered thanks to falling enough
-                if (bLevelPassed) {
-                    onLevelPass();
-                }
-                else {
-                    onFallOff();
-                }
+                HandleFalling();
             }
         }
         else if (bMoving) {
