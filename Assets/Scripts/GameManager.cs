@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour {
         LoadLevel(levelName);
     }
 
+    //reloads WHOLE scene, meaning the level initiation animation is also called + player etc etc
     IEnumerator RestartLevelCoroutine() {
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

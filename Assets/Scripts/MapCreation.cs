@@ -13,6 +13,12 @@ public class MapCreation : MonoBehaviour
     public GameObject tile; 	// Tile prefab used to instance and build the level
     public GameObject VictoryHole; //if stepped into, level is passed
     public GameObject player;   //reference to player to set initial position
+
+    [Header("Animation Settings")]
+    public bool animateTiles = true;
+    public float minRiseSpeed = 0.4f;
+    public float maxRiseSpeed = 1f;
+    public float delayBeforePlayer = 0.5f;
     // Start is called once after the MonoBehaviour is created
     void Start()
     {
@@ -40,7 +46,9 @@ public class MapCreation : MonoBehaviour
         {
             nums[i] = int.Parse(snums[i]);
         }
-		
+
+        float longestAnimationTime = 0f;
+
 		// Create the level. First get the size in tiles of the map from nums
         int sizeX = nums[0], sizeZ = nums[1];
 		
@@ -55,6 +63,23 @@ public class MapCreation : MonoBehaviour
                     //Instantiate(tile, new Vector3(x, 0.0f, z), transform.rotation);
                     GameObject obj = Instantiate(tile, new Vector3(x, -0.05f, z), transform.rotation);
 					
+                    if (animateTiles) {
+                        LevelStartAnimation animator = obj.GetComponent<LevelStartAnimation>();
+                        if (animator == null)
+                            animator = obj.AddComponent<LevelStartAnimation>(); //instead of adding from unity, we do it from here
+                        float randomSpeed = UnityEngine.Random.Range(minRiseSpeed, maxRiseSpeed);
+                        animator.riseSpeed = randomSpeed;
+
+                        // Calculate how long this tile will take to animate
+                        float animationDuration = 1f / randomSpeed;
+                        if (animationDuration > longestAnimationTime) {
+                            longestAnimationTime = animationDuration;
+                        }
+
+                        // Start all tiles at the same time (no delay)
+                        animator.AnimateRise(0f);
+                    }   
+
 					// Set the new object parent to be the game object containing this script
                     obj.transform.parent = transform;
                 }
@@ -78,6 +103,17 @@ public class MapCreation : MonoBehaviour
                     if (player != null) {
                         // Position player at start tile (slightly above so it doesn't clip)
                         player.transform.position = new Vector3(x, 0.5f, z);
+
+                        if (animateTiles) {
+                            PlayerAppearanceAnimator playerAnimator = player.GetComponent<PlayerAppearanceAnimator>();
+                            if (playerAnimator == null) {
+                                playerAnimator = player.AddComponent<PlayerAppearanceAnimator>();
+                            }
+
+                            float totalAnimationTime = longestAnimationTime + delayBeforePlayer;
+                            playerAnimator.ShowAfterDelay(totalAnimationTime);
+                        }
+
                         Debug.Log($"Player spawned at ({x}, {z})");
                     }
                     else {
