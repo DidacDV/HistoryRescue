@@ -1,12 +1,14 @@
-idk if git uploads the prefab, if not:
-create game object
-put tag LevelPassed
-enable isTrigger
-drag the prefab to the mapCreation VictoryHole
-mark 3 in each map.txt as the victory hole
-if enter victory hole, a "level passed" should appear
+Create the maps through unity (using the grid snapping option will make it faster)
 
-Inspiration to adding same script (LevelManager) to multiple scenes:
-Or that you are doing the same thing with adjusted parameters (Scene 1 - spawn 2 players after 5 seconds. Scene 2 - Spawn 1 player after 3 seconds).
-The latter should be solvable by attaching the same script to a gameobject in each scene and adjusting variables in the inspector, as was suggested.
-(https://discussions.unity.com/t/reusing-scripts-across-scenes/564636/5)
+For each level, we can copy Level1Scene, then in 
+	Level initializer, put the tiles of the map and the player cube there
+
+Add the player cube to the levelmanager and the name of the next level scene
+
+To set the player initial position, its also better to use the grid snapping, same for the
+victory hole etc
+----------------------------------------
+LevelInitializer currently is used to set the animation when starting a level of all tiles at once,
+instead of running a script for each tile
+
+(Start() functions get called on LOADING THE SCENE)

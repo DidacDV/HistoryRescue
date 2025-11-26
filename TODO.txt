@@ -9,3 +9,4 @@ Modify cube to be 2x1
 Add all bloxorz movements to the cube
 Add animations when passsing level (as the enunciat says, following the bloxorz one)
 Add animations when failing level (as the enunciat says, following the bloxorz one)
+ADD animations when initializing level DONE

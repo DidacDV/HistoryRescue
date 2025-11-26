@@ -78,8 +78,10 @@ public class PlayerController : MonoBehaviour {
     void HandleFalling() {
         if (!bEventFired && transform.position.y < -5.0f) {
             bEventFired = true;
-            if (bLevelPassed)
+            if (bLevelPassed) {
+                Debug.Log("FALLENNNNN! Falling into victory hole");
                 OnReachedVictoryHole?.Invoke();
+            }
             else
                 OnFellOff?.Invoke();
         }

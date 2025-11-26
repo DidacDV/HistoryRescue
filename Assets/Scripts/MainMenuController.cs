@@ -11,7 +11,7 @@ public class MenuController : MonoBehaviour {
         }
 
         //start the first level
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("Level1Scene");
     }
 
     public void QuitGame() {
