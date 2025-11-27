@@ -2,44 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelInitializer : MonoBehaviour {
+public class InitLevelAnimations : MonoBehaviour {
     [Header("References")]
-    public GameObject[] tiles;  
-    public GameObject player;  
+    public GameObject[] manualTiles;  
+    public GameObject player;
+    public bool autoDetectTiles = true;
 
     [Header("Animation Settings")]
-    public float minRiseSpeed = 0.4f;
-    public float maxRiseSpeed = 1f;
-    public float delayBeforePlayer = 0.5f;
-    public float startYOffset = -3f; //how far below tiles start
+    public float minRiseSpeed;
+    public float maxRiseSpeed;
+    public float delayBeforePlayer;
+    public float startYOffset; //how far below tiles start
 
     private List<TileAnimData> tileAnimations = new List<TileAnimData>();
+    private GameObject[] allTiles;
     private bool isAnimating = false;
     private float longestAnimationTime = 0f;
 
-    private class TileAnimData {
-        public GameObject tile;
-        public Vector3 startPosition;
-        public Vector3 targetPosition;
-        public float speed;
-        public float progress;
+    private string TILES_LAYER = "Ground";
 
-        public TileAnimData(GameObject tile, Vector3 start, Vector3 target, float speed) {
-            this.tile = tile;
-            this.startPosition = start;
-            this.targetPosition = target;
-            this.speed = speed;
-            this.progress = 0f;
+    public void PlayLevelStartAnimation(GameObject playerController) {
+        player = playerController;
+        DetectTilesInLayer(TILES_LAYER);
+        AnimateTilesRising();
+        AnimatePlayerAppearance();
+    }
+
+    private void DetectTilesInLayer(string NameOfLayer) {
+        if (autoDetectTiles) {
+            allTiles = TileDetector.GetTilesByLayer(NameOfLayer);
+        }
+        else {
+            allTiles = manualTiles;
+            Debug.Log($"using {allTiles.Length} manually assigned tiles");
         }
     }
 
-    void Start() {
-        InitializeTileAnimations();
-        AnimatePlayer();
-    }
-
-    void InitializeTileAnimations() {
-        foreach (GameObject tile in tiles) {
+    void AnimateTilesRising() {
+        foreach (GameObject tile in allTiles) {
             if (tile == null) continue;
 
             //store target position (current position)
@@ -60,9 +60,10 @@ public class LevelInitializer : MonoBehaviour {
         }
 
         isAnimating = true;
+        enabled = true; //makes update loop run
     }
 
-    void AnimatePlayer() {
+    void AnimatePlayerAppearance() {
         if (player == null) return;
 
         PlayerAppearanceAnimator playerAnimator = player.GetComponent<PlayerAppearanceAnimator>();
@@ -70,7 +71,7 @@ public class LevelInitializer : MonoBehaviour {
             playerAnimator = player.AddComponent<PlayerAppearanceAnimator>();
         }
 
-        //show player after tiles finish
+        //show player ONLY after tiles finish
         float totalDelay = longestAnimationTime + delayBeforePlayer;
         playerAnimator.ShowAfterDelay(totalDelay);
     }

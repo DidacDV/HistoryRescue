@@ -12,3 +12,16 @@ LevelInitializer currently is used to set the animation when starting a level of
 instead of running a script for each tile
 
 (Start() functions get called on LOADING THE SCENE)
+
+27/11/2025
+Now level manager uses InitLevelAnimations & FailLevelAnimations 
+for starting the level & when player is falling.
+current flow for falling -->  
+	player sets an event
+	level manager listens to it
+	when it detects it, it calls for the level fail animation,
+		passing the gamemanager.instance.levelFailed function
+		to execute it when the animation ends
+	level gets restarted
+	animations get called again
+	...

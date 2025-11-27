@@ -1,3 +1,8 @@
 Created game and level managers
 Event-driven Architecture: player calls for events, level manager is listening for them
 Singleton Pattern for game manager
+
+Should we create a super class for each level animations? 
+they share quite a lot of code except the anim and the update
+
+data classes (check folder in scripts)
