@@ -1,11 +1,11 @@
 TODO
-Add simple winning scene MEDIUM
 Add UI for count of movements and current level EASY
 Modify cube to be 2x1 EASY
 Add all bloxorz movements to the cube HARD
-Add animations when passsing level (as the enunciat says, following the bloxorz one) EASY
 Add menu with start, config, and GOTO LEVEL HARD?
 Create pause mechanic & menu?  HARD?
+Add simple winning scene MEDIUM
+Add VFX particles when user spawns and reaches the ground (use asset store)
 
 DONE
 Take out game logic outside moveObject4 file DONE
@@ -14,6 +14,6 @@ If player falls off the map, restart in same level (maybe set an initial positio
 Add count of movements (should be quick&easy)
 Add simple main menu scene DONE prototype version, just to verify the functionality
 Add animations when failing level (as the enunciat says, following the bloxorz one) DONE
-ADD animations when initializing level DONE
-
+Add animations when initializing level DONE
+Add animations when passsing level (as the enunciat says, following the bloxorz one) DONE
 
