@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour {
     [Header("Animation Components")]
     public InitLevelAnimations initAnimation;
     public FailLevelAnimations failAnimation;
+    public PassLevelAnimations passAnimation;
 
     void SetUpPlayerEvents() {
         if (playerCube != null) {
@@ -37,6 +38,9 @@ public class LevelManager : MonoBehaviour {
     }
 
     void OnPlayerSucceeded() {
-        GameManager.Instance.LevelPassed(nextLevelScene);
+        if (passAnimation != null)
+            passAnimation.PassLevelAnimation(() => GameManager.Instance.LevelPassed(nextLevelScene)); //lambda needed 
+        else
+            Debug.LogError("levelPassAnimations not set for level maanger");
     }
 }
