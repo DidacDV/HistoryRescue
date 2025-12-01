@@ -96,20 +96,11 @@ public class PlayerController : MonoBehaviour
 
                 if (dir != Direction.None)
                 {
-                    if (CanRoll(dir))
-                    {
-                        StartCoroutine(RollToDirection(dir));
-                    }
-                    else
-                    {
-                        
-                        StartCoroutine(RollAndFall(dir));
-                    }
+                    StartCoroutine(RollToDirection(dir));
                 }
             }
         }
     }
-
 
     // Check if we're over the victory hole and in correct position
     void CheckVictoryHole()
@@ -179,41 +170,6 @@ public class PlayerController : MonoBehaviour
         return offset;
     }
 
-    private bool CanRoll(Direction direction)
-    {
-        Vector3 axis = GetAxis(direction);
-        Vector3 directionVector = GetDirectionVector(direction);
-        Vector2 pivotOffset = GetPivotOffset(direction);
-
-        Vector3 pivotPosition = transform.position +
-                                (directionVector * pivotOffset.x) +
-                                (Vector3.down * pivotOffset.y);
-
-        CopyTransformData(transform, ghostPlayer);
-        ghostPlayer.RotateAround(pivotPosition, axis, 90f);
-
-        Vector3 targetPosition = ghostPlayer.position;
-
-        float currentHeight = 1.0f;
-        Vector3 size = ghostPlayer.lossyScale;
-
-        if (Mathf.Abs(Vector3.Dot(ghostPlayer.right, Vector3.up)) > 0.9f) currentHeight = size.x;
-        else if (Mathf.Abs(Vector3.Dot(ghostPlayer.up, Vector3.up)) > 0.9f) currentHeight = size.y;
-        else if (Mathf.Abs(Vector3.Dot(ghostPlayer.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
-
-        targetPosition.y = currentHeight / 2f;
-
-        RaycastHit hit;
-        float rayDistance = targetPosition.y + 0.1f;
-
-        if (Physics.Raycast(targetPosition, Vector3.down, out hit, rayDistance, layerMask))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private IEnumerator RollToDirection(Direction direction)
     {
         if (isRolling) yield break;
@@ -273,38 +229,6 @@ public class PlayerController : MonoBehaviour
     {
         target.position = source.position;
         target.rotation = source.rotation;
-    }
-
-    private IEnumerator RollAndFall(Direction direction)
-    {
-        isRolling = true;
-
-        float partialAngle = 30f;
-        float fallDuration = 0.2f;
-
-        Vector3 axis = GetAxis(direction);
-        Vector3 directionVector = GetDirectionVector(direction);
-        Vector2 pivotOffset = GetPivotOffset(direction);
-
-        Vector3 pivotPosition = transform.position +
-                                (directionVector * pivotOffset.x) +
-                                (Vector3.down * pivotOffset.y);
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fallDuration)
-        {
-            elapsedTime += Time.deltaTime;
-
-            float rotationRate = partialAngle * (Time.deltaTime / fallDuration);
-
-            transform.RotateAround(pivotPosition, axis, rotationRate);
-            yield return null;
-        }
-
-        isRolling = false;
-        bFalling = true;
-        if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
     }
 
 }
