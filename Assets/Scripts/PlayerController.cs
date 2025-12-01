@@ -1,27 +1,25 @@
 using System;
+using System.Collections; 
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(BoxCollider))]
+public class PlayerController : MonoBehaviour
+{
+    public enum Direction { None, Forward, Backward, Left, Right }
 
-// MoveCube manages cube movement. WASD + Cursor keys rotate the cube in the
-// selected direction. If the cube is not grounded (has a tile under it), it falls.
-// Victory condition: cube must be standing upright and fall into the victory hole.
-
-
-public class PlayerController : MonoBehaviour {
     InputAction moveAction; 		// Input action to capture player movement (WASD + cursor keys)
 
-    bool bMoving = false;           // Is the object in the middle of moving?
+    bool isRolling = false;          // Is the object in the middle of moving?
+    Transform pivot;
+
     bool bFalling = false; 			// Is the object falling?
     bool bLevelPassed = false;      // Has the level been completed?
 
     public float rotSpeed; 			// Rotation speed in degrees per second
     public float fallSpeed; 		// Fall speed in the Y direction
 
-    Vector3 rotPoint, rotAxis;      // Rotation movement is performed around the line formed by rotPoint and rotAxis
-    float rotRemainder; 			// The angle that the cube still has to rotate before the current movement is completed
-    float rotDir; 					// Has rotRemainder to be applied in the positive or negative direction?
     LayerMask layerMask; 			// LayerMask to detect raycast hits with ground tiles only
 
     public AudioClip[] sounds; 		// Sounds to play when the cube rotates
@@ -30,149 +28,283 @@ public class PlayerController : MonoBehaviour {
 
     public UnityEvent OnFellOff;
     public UnityEvent OnReachedVictoryHole;
-    bool bEventFired = false;  //prevent multiple event of levelpass
-    // Determine if the cube is standing upright (vertical orientation) to recreate bloxorz o como se diga
-    bool IsStandingUpright() {
-        //actual logic should go here
-        return true;
+    Collider m_Collider;
+    bool bEventFired = false;
+
+    public Transform ghostPlayer; 
+    public Transform ghostPivot;
+
+    bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
+
+    bool isGrounded()
+    {
+        float distToGround = m_Collider.bounds.extents.y;
+        return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f, layerMask);
     }
 
-    // Determine if the cube is grounded by shooting a ray down from the cube location and 
-    // looking for hits with ground tiles
-    bool isGrounded() {
-        RaycastHit hit;
+    void Start()
+    {
+        moveAction = InputSystem.actions.FindAction("Move");
+        layerMask = LayerMask.GetMask("Ground");
+        m_Collider = GetComponent<Collider>();
 
-        // Cast ray from cube position downward
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f, layerMask)) {
+        pivot = new GameObject("RotationPivot").transform;
+        ghostPivot = new GameObject("GhostPivot").transform;
+        if (ghostPlayer == null)
+        {
+            ghostPlayer = new GameObject("GhostPlayer_TEMP").transform;
+            ghostPlayer.gameObject.SetActive(false);
+        }
+
+    }
+
+    void Update()
+    {
+        if (bFalling)
+        {
+            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
+            if (transform.position.y < -5.0f) HandleFalling();
+        }
+        else if (!isRolling)
+        {
+
+            if (!isGrounded())
+            {
+                CheckVictoryHole();
+                if (!bLevelPassed)
+                {
+                    bFalling = true;
+                    if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
+                }
+                return;
+            }
+
+            Vector2 input = moveAction.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude > 0.5f)
+            {
+                Direction dir = Direction.None;
+
+                if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
+                {
+                    dir = input.x > 0 ? Direction.Right : Direction.Left;
+                }
+                else
+                {
+                    dir = input.y > 0 ? Direction.Forward : Direction.Backward;
+                }
+
+                if (dir != Direction.None)
+                {
+                    if (CanRoll(dir))
+                    {
+                        StartCoroutine(RollToDirection(dir));
+                    }
+                    else
+                    {
+                        
+                        StartCoroutine(RollAndFall(dir));
+                    }
+                }
+            }
+        }
+    }
+
+
+    // Check if we're over the victory hole and in correct position
+    void CheckVictoryHole()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.0f))
+        {
+            if (hit.collider.CompareTag("LevelPass"))
+            {
+                if (IsStandingUpright())
+                {
+                    Debug.Log("CORRECT POSITION! Falling into victory hole");
+                    bFalling = true;
+                    bLevelPassed = true;
+                    if (victorySound != null) { } // AudioSource.PlayClipAtPoint(victorySound, transform.position, 1.5f);
+                }
+            }
+        }
+    }
+
+    void HandleFalling()
+    {
+        if (!bEventFired && transform.position.y < -5.0f)
+        {
+            bEventFired = true;
+            if (bLevelPassed) OnReachedVictoryHole?.Invoke();
+            else OnFellOff?.Invoke();
+        }
+    }
+
+    private Vector3 GetAxis(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Left: return Vector3.forward;
+            case Direction.Right: return Vector3.back;
+            case Direction.Forward: return Vector3.right;
+            case Direction.Backward: return Vector3.left;
+            default: return Vector3.zero;
+        }
+    }
+
+    private Vector3 GetDirectionVector(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Left: return Vector3.left;
+            case Direction.Right: return Vector3.right;
+            case Direction.Forward: return Vector3.forward;
+            case Direction.Backward: return Vector3.back;
+            default: return Vector3.zero;
+        }
+    }
+
+    private Vector2 GetPivotOffset(Direction direction)
+    {
+        Bounds bounds = m_Collider.bounds;
+        Vector2 offset = Vector2.zero;
+
+        offset.y = bounds.extents.y;
+
+        if (direction == Direction.Left || direction == Direction.Right)
+            offset.x = bounds.extents.x;
+        else
+            offset.x = bounds.extents.z;
+
+        return offset;
+    }
+
+    private bool CanRoll(Direction direction)
+    {
+        Vector3 axis = GetAxis(direction);
+        Vector3 directionVector = GetDirectionVector(direction);
+        Vector2 pivotOffset = GetPivotOffset(direction);
+
+        Vector3 pivotPosition = transform.position +
+                                (directionVector * pivotOffset.x) +
+                                (Vector3.down * pivotOffset.y);
+
+        CopyTransformData(transform, ghostPlayer);
+        ghostPlayer.RotateAround(pivotPosition, axis, 90f);
+
+        Vector3 targetPosition = ghostPlayer.position;
+
+        float currentHeight = 1.0f;
+        Vector3 size = ghostPlayer.lossyScale;
+
+        if (Mathf.Abs(Vector3.Dot(ghostPlayer.right, Vector3.up)) > 0.9f) currentHeight = size.x;
+        else if (Mathf.Abs(Vector3.Dot(ghostPlayer.up, Vector3.up)) > 0.9f) currentHeight = size.y;
+        else if (Mathf.Abs(Vector3.Dot(ghostPlayer.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
+
+        targetPosition.y = currentHeight / 2f;
+
+        RaycastHit hit;
+        float rayDistance = targetPosition.y + 0.1f;
+
+        if (Physics.Raycast(targetPosition, Vector3.down, out hit, rayDistance, layerMask))
+        {
             return true;
         }
 
         return false;
     }
 
-    // Check if we're over the victory hole and in correct position
-    void CheckVictoryHole() {
-        RaycastHit hit;
+    private IEnumerator RollToDirection(Direction direction)
+    {
+        if (isRolling) yield break;
 
-        // Cast ray downward to detect victory hole
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.0f)) {
-            if (hit.collider.CompareTag("LevelPass")) {
-                // Check if cube is standing upright
-                if (IsStandingUpright()) {
-                    Debug.Log("CORRECT POSITION! Falling into victory hole");
-                    bFalling = true;
-                    bLevelPassed = true;
+        isRolling = true;
 
-                    //play victory sound
-                    if (victorySound != null) {
-                        //AudioSource.PlayClipAtPoint(victorySound, transform.position, 1.5f);
-                    }
-                }
-                else {
-                    Debug.Log("Wrong orientation");
-                }
-            }
+        float angle = 90f;
+        float rollDuration = 90f / rotSpeed;
+
+        Vector3 axis = GetAxis(direction);
+        Vector3 directionVector = GetDirectionVector(direction);
+        Vector2 pivotOffset = GetPivotOffset(direction);
+
+        Vector3 pivotPosition = transform.position +
+                                (directionVector * pivotOffset.x) +
+                                (Vector3.down * pivotOffset.y);
+
+        pivot.position = pivotPosition;
+
+        CopyTransformData(transform, ghostPlayer);
+
+        ghostPlayer.RotateAround(pivotPosition, axis, angle);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < rollDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float rotationRate = angle * (Time.deltaTime / rollDuration);
+
+            transform.RotateAround(pivotPosition, axis, rotationRate);
+            yield return null;
         }
+
+        transform.rotation = ghostPlayer.rotation;
+
+        Vector3 finalPos = ghostPlayer.position;
+
+        float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
+        float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
+
+        float currentHeight = 1.0f;
+        Vector3 size = transform.lossyScale;
+
+        if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.9f) currentHeight = size.x;
+        else if (Mathf.Abs(Vector3.Dot(transform.up, Vector3.up)) > 0.9f) currentHeight = size.y;
+        else if (Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
+
+        transform.position = new Vector3(snappedX, currentHeight / 2f, snappedZ);
+
+        isRolling = false;
+        CheckVictoryHole();
     }
 
-    void HandleFalling() {
-        if (!bEventFired && transform.position.y < -5.0f) {
-            bEventFired = true;
-            if (bLevelPassed) {
-                Debug.Log("FALLENNNNN! Falling into victory hole");
-                OnReachedVictoryHole?.Invoke();
-            }
-            else
-                OnFellOff?.Invoke();
-        }
+    public void CopyTransformData(Transform source, Transform target)
+    {
+        target.position = source.position;
+        target.rotation = source.rotation;
     }
 
-    //Start is called once after the MonoBehaviour is created
-    void Start() {
-        // Find the move action by name. Done once in the Start method to avoid doing it every Update call.
-        moveAction = InputSystem.actions.FindAction("Move");
+    private IEnumerator RollAndFall(Direction direction)
+    {
+        isRolling = true;
 
-        // Create the layer mask for ground tiles. Done once in the Start method to avoid doing it every Update call.
-        layerMask = LayerMask.GetMask("Ground");
-    }
+        float partialAngle = 30f;
+        float fallDuration = 0.2f;
 
-    // Update is called once per frame
-    void Update() {
-        if (bFalling) {
-            // If we have fallen, we just move down
-            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
+        Vector3 axis = GetAxis(direction);
+        Vector3 directionVector = GetDirectionVector(direction);
+        Vector2 pivotOffset = GetPivotOffset(direction);
 
-            if (transform.position.y < -5.0f) {
-                HandleFalling();
-            }
+        Vector3 pivotPosition = transform.position +
+                                (directionVector * pivotOffset.x) +
+                                (Vector3.down * pivotOffset.y);
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fallDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float rotationRate = partialAngle * (Time.deltaTime / fallDuration);
+
+            transform.RotateAround(pivotPosition, axis, rotationRate);
+            yield return null;
         }
-        else if (bMoving) {
-            // If we are moving, we rotate around the line formed by rotPoint and rotAxis an angle depending on deltaTime
-            // If this angle is larger than the remainder, we stop the movement
-            float amount = rotSpeed * Time.deltaTime;
-            if (amount > rotRemainder) {
-                transform.RotateAround(rotPoint, rotAxis, rotRemainder * rotDir);
-                bMoving = false;
 
-                // After movement completes, check if we're on victory hole
-                CheckVictoryHole();
-            }
-            else {
-                transform.RotateAround(rotPoint, rotAxis, amount * rotDir);
-                rotRemainder -= amount;
-            }
-        }
-        else {
-            // If we are not falling, nor moving, we check first if we should fall, then if we have to move
-            if (!isGrounded()) {
-                // Check if we're falling into victory hole or just falling off
-                CheckVictoryHole();
-
-                if (!bLevelPassed) {
-                    bFalling = true;
-
-                    // Play sound associated to falling
-                    AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
-                }
-            }
-
-            // Read the move action for input
-            Vector2 dir = moveAction.ReadValue<Vector2>();
-            if (Math.Abs(dir.x) > 0.99 || Math.Abs(dir.y) > 0.99) {
-                // If the absolute value of one of the axis is larger than 0.99, the player wants to move in a non diagonal direction
-                bMoving = true;
-
-                // We play a random movement sound
-                int iSound = UnityEngine.Random.Range(0, sounds.Length);
-                AudioSource.PlayClipAtPoint(sounds[iSound], transform.position, 1.0f);
-
-                // Set rotDir, rotRemainder, rotPoint, and rotAxis according to the movement the player wants to make
-                if (dir.x > 0.99) {
-                    rotDir = -1.0f;
-                    rotRemainder = 90.0f;
-                    rotAxis = new Vector3(0.0f, 0.0f, 1.0f);
-                    rotPoint = transform.position + new Vector3(0.5f, -0.5f, 0.0f);
-                }
-                else if (dir.x < -0.99) {
-                    rotDir = 1.0f;
-                    rotRemainder = 90.0f;
-                    rotAxis = new Vector3(0.0f, 0.0f, 1.0f);
-                    rotPoint = transform.position + new Vector3(-0.5f, -0.5f, 0.0f);
-                }
-                else if (dir.y > 0.99) {
-                    rotDir = 1.0f;
-                    rotRemainder = 90.0f;
-                    rotAxis = new Vector3(1.0f, 0.0f, 0.0f);
-                    rotPoint = transform.position + new Vector3(0.0f, -0.5f, 0.5f);
-                }
-                else if (dir.y < -0.99) {
-                    rotDir = -1.0f;
-                    rotRemainder = 90.0f;
-                    rotAxis = new Vector3(1.0f, 0.0f, 0.0f);
-                    rotPoint = transform.position + new Vector3(0.0f, -0.5f, -0.5f);
-                }
-            }
-        }
+        isRolling = false;
+        bFalling = true;
+        if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
     }
 
 }
