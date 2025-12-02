@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   currentLevel: 1
   totalScore: 0
+  currentLevelName: Level1Scene
 --- !u!4 &209595782
 Transform:
   m_ObjectHideFlags: 0

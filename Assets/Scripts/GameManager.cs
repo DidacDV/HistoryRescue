@@ -8,12 +8,18 @@ public class GameManager : MonoBehaviour {
     [Header("Game State")]
     public int currentLevel = 1;
     public int totalScore = 0;
-
+    public string currentLevelName = "";
     //singleton pattern
     void Awake() {
         if (Instance == null) {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += (scene, mode) => {
+                if (scene.name.StartsWith("Level")) {
+                    currentLevelName = scene.name;
+                    Debug.Log($"current level:{currentLevelName}");
+                }
+            };
         }
         else {
             Destroy(gameObject);
@@ -51,7 +57,7 @@ public class GameManager : MonoBehaviour {
     //reloads WHOLE scene, meaning the level initiation animation is also called + player etc etc
     IEnumerator RestartLevelCoroutine() {
         yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(currentLevelName);
     }
 
     void LoadLevel(string levelName) {

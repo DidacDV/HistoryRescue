@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     void PlayInitialAnimation() {
+        Debug.Log("playing level start animation");
         if (initAnimation != null)
             initAnimation.PlayLevelStartAnimation(playerCube.gameObject);
         else
