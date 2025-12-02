@@ -5,7 +5,6 @@ using UnityEngine;
 public class InitLevelAnimations : MonoBehaviour {
     [Header("References")]
     public GameObject[] manualTiles;  
-    public GameObject player;
     public bool autoDetectTiles = true;
 
     [Header("Animation Settings")]
@@ -18,10 +17,14 @@ public class InitLevelAnimations : MonoBehaviour {
     private GameObject[] allTiles;
     private bool isAnimating = false;
     private float longestAnimationTime = 0f;
+    public GameObject player;
 
     private string TILES_LAYER = "Ground";
 
     public void PlayLevelStartAnimation(GameObject playerController) {
+        if (playerController == null)
+            playerController = GameObject.Find("PlayerController");
+        
         player = playerController;
         DetectTilesInLayer(TILES_LAYER);
         AnimateTilesRising();
