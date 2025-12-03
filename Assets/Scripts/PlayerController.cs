@@ -176,6 +176,8 @@ public class PlayerController : MonoBehaviour
 
         isRolling = true;
 
+        UIManager.Instance.IncrementMovement();
+
         float angle = 90f;
         float rollDuration = 90f / rotSpeed;
 

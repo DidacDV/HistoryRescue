@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator LoadNextLevelCoroutine(string levelName) {
         yield return new WaitForSeconds(1.5f);
+        UIManager.Instance.IncrementDifficultyImage();
         LoadLevel(levelName);
     }
 
