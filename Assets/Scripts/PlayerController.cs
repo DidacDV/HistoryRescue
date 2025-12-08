@@ -42,6 +42,84 @@ public class PlayerController : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f, layerMask);
     }
 
+    bool IsMoveSafe(Transform ghost)
+    {
+        BoxCollider b = ghost.GetComponent<BoxCollider>();
+        Vector3[] localCorners = GetLocalCorners(b);
+        Vector3[] worldCorners = new Vector3[8];
+
+        float minY = float.MaxValue;
+        for (int i = 0; i < 8; i++)
+        {
+            worldCorners[i] = ghost.TransformPoint(localCorners[i]);
+            if (worldCorners[i].y < minY) minY = worldCorners[i].y;
+        }
+
+        var bottomCorners = new System.Collections.Generic.List<Vector3>();
+        Vector3 bottomCenter = Vector3.zero;
+
+        foreach (var p in worldCorners)
+        {
+            if (Mathf.Abs(p.y - minY) < 0.05f)
+            {
+                bottomCorners.Add(p);
+                bottomCenter += p;
+            }
+        }
+
+        if (bottomCorners.Count != 4) return false;
+        bottomCenter /= 4f;
+
+        int validHits = 0;
+        float inset = 0.15f;
+
+        foreach (var p in bottomCorners)
+        {
+            Vector3 dirToCenter = (bottomCenter - p).normalized;
+            Vector3 testPoint = p + (dirToCenter * inset);
+            Vector3 rayOrigin = testPoint + Vector3.up * 0.1f;
+
+            RaycastHit hit;
+
+            // Note: We use 'layerMask' here. 
+            // YOUR VICTORY HOLE OBJECT MUST BE ON THE 'GROUND' LAYER for this to hit!
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 1.0f, layerMask)) // Increased distance to 1.0f to be safe
+            {
+                // IT IS SAFE IF:
+                // 1. We hit a normal ground tile
+                // 2. OR We hit the "LevelPass" object
+                if (hit.collider.CompareTag("LevelPass") || ((1 << hit.collider.gameObject.layer) & layerMask) != 0)
+                {
+                    validHits++;
+                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.green, 2.0f);
+                }
+            }
+            else
+            {
+                Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.red, 2.0f);
+
+                // --- ADD THIS DEBUGGING BLOCK ---
+                RaycastHit debugHit;
+                // Cast a ray without the layer mask to see what we are ACTUALLY hitting
+                if (Physics.Raycast(rayOrigin, Vector3.down, out debugHit, 1.0f))
+                {
+                    Debug.Log($"Ray hit '{debugHit.collider.name}' but failed because:");
+                    if (((1 << debugHit.collider.gameObject.layer) & layerMask) == 0)
+                        Debug.Log($"- Wrong Layer! It is on '{LayerMask.LayerToName(debugHit.collider.gameObject.layer)}' but we need 'Ground'.");
+                    if (!debugHit.collider.CompareTag("LevelPass"))
+                        Debug.Log($"- Wrong Tag! It is tagged '{debugHit.collider.tag}' but we need 'LevelPass'.");
+                }
+                else
+                {
+                    Debug.Log("Ray hit NOTHING! (Empty space)");
+                }
+                // -----------------------------
+            }
+        }
+
+        return validHits == 4;
+    }
+
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
@@ -50,10 +128,20 @@ public class PlayerController : MonoBehaviour
 
         pivot = new GameObject("RotationPivot").transform;
         ghostPivot = new GameObject("GhostPivot").transform;
+
         if (ghostPlayer == null)
         {
-            ghostPlayer = new GameObject("GhostPlayer_TEMP").transform;
-            ghostPlayer.gameObject.SetActive(false);
+            GameObject ghostObj = new GameObject("GhostPlayer_TEMP");
+            ghostPlayer = ghostObj.transform;
+            BoxCollider ghostCol = ghostObj.AddComponent<BoxCollider>();
+            BoxCollider playerCol = GetComponent<BoxCollider>();
+            if (playerCol != null)
+            {
+                ghostCol.size = playerCol.size;
+                ghostCol.center = playerCol.center;
+            }
+            ghostCol.isTrigger = true;
+            ghostObj.SetActive(true);
         }
 
     }
@@ -131,6 +219,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    Vector3[] GetLocalCorners(BoxCollider b)
+    {
+        Vector3 c = b.center;
+        Vector3 e = b.size * 0.5f;
+
+        return new Vector3[] {
+            c + new Vector3(e.x, e.y, e.z),
+            c + new Vector3(e.x, e.y, -e.z),
+            c + new Vector3(e.x, -e.y, e.z),
+            c + new Vector3(e.x, -e.y, -e.z),
+            c + new Vector3(-e.x, e.y, e.z),
+            c + new Vector3(-e.x, e.y, -e.z),
+            c + new Vector3(-e.x, -e.y, e.z),
+            c + new Vector3(-e.x, -e.y, -e.z)
+        };
+    }
+
     private Vector3 GetAxis(Direction direction)
     {
         switch (direction)
@@ -174,10 +279,6 @@ public class PlayerController : MonoBehaviour
     {
         if (isRolling) yield break;
 
-        isRolling = true;
-
-        UIManager.Instance.IncrementMovement();
-
         float angle = 90f;
         float rollDuration = 90f / rotSpeed;
 
@@ -192,10 +293,21 @@ public class PlayerController : MonoBehaviour
         pivot.position = pivotPosition;
 
         CopyTransformData(transform, ghostPlayer);
-
         ghostPlayer.RotateAround(pivotPosition, axis, angle);
 
+        Physics.SyncTransforms();
+
+        //bool isSafe = IsMoveSafe(ghostPlayer);
+        //if (!isSafe)
+        //{
+        //    Debug.Log("Prohibited Move detected! Position is unstable.");
+        //    isRolling = false;
+        //    yield break;
+        //}
         float elapsedTime = 0f;
+
+        UIManager.Instance.IncrementMovement();
+        isRolling = true;
 
         while (elapsedTime < rollDuration)
         {
@@ -227,10 +339,12 @@ public class PlayerController : MonoBehaviour
         CheckVictoryHole();
     }
 
+
     public void CopyTransformData(Transform source, Transform target)
     {
         target.position = source.position;
         target.rotation = source.rotation;
+        target.localScale = source.localScale;
     }
 
 }
