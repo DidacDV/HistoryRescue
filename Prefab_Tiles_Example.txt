@@ -1,0 +1,5 @@
+For each tile, for each theme:
+Use the standard tile prefab (grab it from the asset folder and put it in the unity editor)
+Change its material (a material uses a textura, f.ex same material but with Orange texture so it looks like the bloxorz tiles)
+Save it to the prefab folder, unity asks if prefab variant or original prefab, we pick prefab variant.
+Now this tile uses the same logic as the parent + its own (it kinda Works like inheritance)
