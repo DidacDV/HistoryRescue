@@ -6,8 +6,10 @@ using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
     public static UIManager Instance;
-
     [SerializeField] private TextMeshProUGUI movementCountValueText;
+    [SerializeField] private TextMeshProUGUI movementCountLabel;
+
+    [SerializeField] private TextMeshProUGUI leveLabel;
     [SerializeField] private Image levelDifficultyImage;
     private int movementCount = 0;
 
@@ -75,5 +77,19 @@ public class UIManager : MonoBehaviour {
             Debug.LogWarning("Invalid level index for difficulty image.");
         }
     }
+    #endregion
+
+    #region theme
+
+    public void ApplyTheme(LevelTheme theme)
+    {
+        if (theme.themeFont != null) {
+            movementCountLabel.font = theme.themeFont;
+            leveLabel.font = theme.themeFont;
+        }
+        else
+            return;
+    }
+
     #endregion
 }

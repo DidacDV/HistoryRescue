@@ -1,0 +1,1 @@
+To create a new theme, go to the assets folder, CustomThemes, right click, create, game, Level Theme
