@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -39,7 +41,14 @@ public class UIManager : MonoBehaviour
         }
 
         UpdateMovementText();
+
+        // Disable UI if starting in MainMenu
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            DisableUI();
+        }
     }
+
 
     public void InitUIVars()
     {
@@ -128,11 +137,13 @@ public class UIManager : MonoBehaviour
 
     public void DisableUI()
     {
+        Debug.Log("disabling ui");
         UICanvas.enabled = false;
     }
 
     public void EnableUI()
     {
+        Debug.Log("enabling ui");
         UICanvas.enabled = true;
     }
 

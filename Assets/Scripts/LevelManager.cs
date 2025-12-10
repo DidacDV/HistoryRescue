@@ -7,6 +7,8 @@ public class LevelManager : MonoBehaviour {
     public string nextLevelScene; //name of next level scene
     public LevelTheme currentTheme; //NULL if the current level keeps the same font, otherwise the new font to be set in the UI
 
+    public SpriteRenderer backgroundSprite;
+
     public PlayerController playerCube;
 
     [Header("Animation Components")]
@@ -34,7 +36,11 @@ public class LevelManager : MonoBehaviour {
     void SetUpTheme()
     {
         if (currentTheme != null)
+        {
             UIManager.Instance.ApplyTheme(currentTheme);
+            if (currentTheme.backgroundImage != null)
+                backgroundSprite.sprite = currentTheme.backgroundImage;
+        }
         else
             return;
     }
