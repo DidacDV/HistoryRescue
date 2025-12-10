@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     [Header("Theme options")]
     [SerializeField] private Image UIPanel;
 
+    [SerializeField] private GameObject PauseUI;
+
     void Awake()
     {
         //singleton pattern 
@@ -37,6 +39,14 @@ public class UIManager : MonoBehaviour
         }
 
         UpdateMovementText();
+    }
+
+    public void InitUIVars()
+    {
+        Debug.Log("reseting UI");
+        ResetDifficultyImage();
+        ResetMovementCount();
+        PauseUI.SetActive(false);
     }
 
 
@@ -124,6 +134,29 @@ public class UIManager : MonoBehaviour
     public void EnableUI()
     {
         UICanvas.enabled = true;
+    }
+
+    #endregion
+
+    #region pause menu
+
+    public void OnResumeGamePress()
+    {
+        Time.timeScale = 1f;
+        PauseUI.SetActive(false);
+    }
+
+    public void OnBackToMenuPress()
+    {
+        Time.timeScale = 1;
+        PauseUI.SetActive(false);
+        GameManager.Instance.ReturnToMainMenu();
+    }
+
+    public void OnEnterPause()
+    {
+        PauseUI.SetActive(true);
+        Time.timeScale = 0;
     }
 
     #endregion

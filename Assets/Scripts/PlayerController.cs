@@ -60,6 +60,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            UIManager.Instance.OnEnterPause();
+            return;
+        }
+
+        //game is paused
+        if (Time.timeScale == 0) return;
+        
         if (bFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);

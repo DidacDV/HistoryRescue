@@ -38,7 +38,8 @@ public class GameManager : MonoBehaviour {
     public void StartGame() {
         currentLevel = 1;
         totalScore = 0;
-        LoadLevel("Level1");
+        UIManager.Instance.InitUIVars();
+        LoadLevel("Level1Scene");
     }
 
     public void LevelPassed(string nextLevelName) {
@@ -71,5 +72,10 @@ public class GameManager : MonoBehaviour {
 
     void LoadLevel(string levelName) {
         SceneManager.LoadScene(levelName);
+    }
+
+    public void ReturnToMainMenu() {
+        Debug.Log("Returning to Main Menu...");
+        SceneManager.LoadScene("MainMenu");
     }
 }
