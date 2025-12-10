@@ -1,47 +1,38 @@
-using System.Diagnostics;
 using UnityEngine;
+using DG.Tweening;
 
-public class PressurePlate : MonoBehaviour
+public class PressurePlate : MonoBehaviour, ISwitchSource
 {
-    [SerializeField] private GameObject linkedSystemObject; 
+    [Header("Settings")]
+    [SerializeField] private GameObject linkedSystemObject;
     [SerializeField] private float pressDepth = 0.15f;
-    [SerializeField] private float animSpeed = 5f;
+    [SerializeField] private float animDuration = 0.2f;
 
     private ISwitchListener linkedSystem;
     private Vector3 upPos;
     private Vector3 downPos;
-    private Vector3 targetPos;
     private int objectsOnPlate = 0;
 
     void Start()
     {
         upPos = transform.localPosition;
-        downPos = new Vector3(upPos.x, upPos.y - pressDepth, upPos.z);
-        targetPos = upPos;
+        downPos = upPos - new Vector3(0, pressDepth, 0);
 
         if (linkedSystemObject != null)
-        {
             linkedSystem = linkedSystemObject.GetComponent<ISwitchListener>();
-            if (linkedSystem == null)
-            {
-                UnityEngine.Debug.LogWarning($"Linked system on {linkedSystemObject.name} doesn't implement ISwitchListener!");
-            }
-        }
-    }
-
-    void Update()
-    {
-        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * animSpeed);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Ghost"))
+        if (IsValidObject(other))
         {
             objectsOnPlate++;
             if (objectsOnPlate == 1)
             {
-                targetPos = downPos;
+                // Animate Down
+                transform.DOKill();
+                transform.DOLocalMove(downPos, animDuration).SetEase(Ease.OutQuad);
+
                 linkedSystem?.RegisterSwitch(this);
             }
         }
@@ -49,15 +40,24 @@ public class PressurePlate : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Ghost"))
+        if (IsValidObject(other))
         {
             objectsOnPlate--;
             if (objectsOnPlate <= 0)
             {
                 objectsOnPlate = 0;
-                targetPos = upPos;
+
+                // Animate Up
+                transform.DOKill();
+                transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
+
                 linkedSystem?.RemoveSwitch(this);
             }
         }
+    }
+
+    private bool IsValidObject(Collider other)
+    {
+        return other.CompareTag("Player") || other.CompareTag("Ghost");
     }
 }

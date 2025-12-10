@@ -4,47 +4,50 @@ using UnityEngine;
 public class TogglableTiles : MonoBehaviour, ISwitchListener
 {
     [SerializeField] private int requiredSwitches = 1;
-    [SerializeField] private List<GameObject> controlledTiles = new List<GameObject>();
+    [SerializeField] private List<TogglableTile> controlledTiles = new List<TogglableTile>();
 
-    private bool areTilesActive = false;
-    private HashSet<PressurePlate> currentSwitchesPressed = new HashSet<PressurePlate>();
+    private HashSet<ISwitchSource> _pressedPlates = new HashSet<ISwitchSource>();
+    private bool _currentState;
 
-    void Start()
+    private void Start()
     {
         if (controlledTiles.Count > 0 && controlledTiles[0] != null)
         {
-            areTilesActive = controlledTiles[0].activeSelf;
+            _currentState = controlledTiles[0].startVisible;
+        }
+
+        UpdateTileState();
+    }
+
+    public void RegisterSwitch(ISwitchSource plate)
+    {
+        if (_pressedPlates.Add(plate))
+        {
+            CheckToggleCondition();
         }
     }
 
-    public void RegisterSwitch(PressurePlate plate)
+    public void RemoveSwitch(ISwitchSource plate)
     {
-        if (!currentSwitchesPressed.Contains(plate))
-        {
-            currentSwitchesPressed.Add(plate);
-            if (currentSwitchesPressed.Count == requiredSwitches)
-            {
-                areTilesActive = !areTilesActive;
-                UpdateTileState();
-            }
-        }
+        _pressedPlates.Remove(plate);
     }
 
-    public void RemoveSwitch(PressurePlate plate)
+    private void CheckToggleCondition()
     {
-        if (currentSwitchesPressed.Contains(plate))
+        if (_pressedPlates.Count >= requiredSwitches)
         {
-            currentSwitchesPressed.Remove(plate);
+            _currentState = !_currentState;
+            UpdateTileState();
         }
     }
 
     private void UpdateTileState()
     {
-        foreach (GameObject tile in controlledTiles)
+        foreach (TogglableTile tile in controlledTiles)
         {
             if (tile != null)
             {
-                tile.SetActive(areTilesActive);
+                tile.SetTileState(_currentState);
             }
         }
     }

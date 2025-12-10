@@ -52,7 +52,6 @@ public class PassLevelAnimations : MonoBehaviour {
 
         foreach (GameObject tile in allTiles) {
             if (tile == null) continue;
-
             Vector3 startPos = tile.transform.position;
             Vector3 targetPos = new Vector3(startPos.x, startPos.y + flyDistance, startPos.z);
             Vector3 offset = startPos - levelCenter;

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BoxCollider))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingChecker
 {
     public enum Direction { None, Forward, Backward, Left, Right }
 
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public Transform ghostPlayer; 
     public Transform ghostPivot;
 
-    bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
+    public bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
 
     bool isGrounded()
     {
