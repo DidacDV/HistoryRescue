@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private Sprite[] difficultySprites;
     private int currentDifficultyIndex = 0;
 
+    [SerializeField] private Canvas UICanvas;
+
     void Awake() {
         //singleton pattern 
         if (Instance == null) {
@@ -89,6 +91,20 @@ public class UIManager : MonoBehaviour {
         }
         else
             return;
+    }
+
+    #endregion
+
+    #region visibility
+
+    public void DisableUI()
+    {
+        UICanvas.enabled = false;
+    }
+
+    public void EnableUI()
+    {
+        UICanvas.enabled = true;
     }
 
     #endregion

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: caa7e60703a3a034f822b0b76ce36a11, type: 3}
-  m_Name: AncientTheme
+  m_Name: CyberTheme
   m_EditorClassIdentifier: Assembly-CSharp::LevelTheme
-  themeName: AncientTheme
-  themeFont: {fileID: 11400000, guid: c2e082dfa66246f498a85670782e5cc0, type: 2}
+  themeName: Cyber Theme
+  themeFont: {fileID: 11400000, guid: ca36c5953cef41d4e9f68b17dfb8e53b, type: 2}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   backgroundImage: {fileID: 0}
