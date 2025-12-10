@@ -19,6 +19,14 @@ public class GameManager : MonoBehaviour {
                     currentLevelName = scene.name;
                     Debug.Log($"current level:{currentLevelName}");
                 }
+
+                if (scene.name == "MainMenu")
+                {
+                    if (UIManager.Instance != null)
+                        UIManager.Instance.DisableUI();
+                }
+                else
+                    UIManager.Instance.EnableUI();
             };
         }
         else {
