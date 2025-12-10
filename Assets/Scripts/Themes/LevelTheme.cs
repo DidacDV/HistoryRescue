@@ -8,4 +8,5 @@ public class LevelTheme : ScriptableObject
     public TMP_FontAsset themeFont;
     public Color backgroundColor;
     public Sprite backgroundImage;
+    public Sprite UIContainerImage;
 }
