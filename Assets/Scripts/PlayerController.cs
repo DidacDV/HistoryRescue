@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     public bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
 
+    public bool IsRolling { get { return isRolling; } }
+
     bool isGrounded()
     {
         float distToGround = m_Collider.bounds.extents.y;
@@ -120,8 +122,9 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         return validHits == 4;
     }
 
-    void Start()
+    void Awake()
     {
+        // Initialize everything in Awake BEFORE OnEnable is called
         moveAction = InputSystem.actions.FindAction("Move");
         layerMask = LayerMask.GetMask("Ground");
         m_Collider = GetComponent<Collider>();
@@ -143,11 +146,36 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             ghostCol.isTrigger = true;
             ghostObj.SetActive(true);
         }
-
     }
+
+    void Start()
+    {
+    }
+
+    void OnEnable()
+    {
+        if (moveAction != null) moveAction.Enable();
+    }
+
+    void OnDisable()
+    {
+        if (moveAction != null) moveAction.Disable();
+    }
+
+    public void ResetState()
+    {
+        StopAllCoroutines();
+        isRolling = false;
+        bFalling = false;
+        bLevelPassed = false;
+        bEventFired = false;
+        Debug.Log("PlayerController state reset!");
+    }
+
 
     void Update()
     {
+        UnityEngine.Debug.Log($"Update - bFalling: {bFalling}, isRolling: {isRolling}");
         if (bFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
@@ -155,9 +183,9 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         }
         else if (!isRolling)
         {
-
             if (!isGrounded())
             {
+                UnityEngine.Debug.Log("Player not grounded after reconstitution!");
                 CheckVictoryHole();
                 if (!bLevelPassed)
                 {
@@ -168,6 +196,11 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
 
             Vector2 input = moveAction.ReadValue<Vector2>();
+
+            if (input.sqrMagnitude > 0.1f)
+            {
+                Debug.Log($"Player received input: {input}");
+            }
 
             if (input.sqrMagnitude > 0.5f)
             {

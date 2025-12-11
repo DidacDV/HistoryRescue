@@ -603,6 +603,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &322664283
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4774017656532866679, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: linkedSystemObject
+      value: 
+      objectReference: {fileID: 1086741113}
+    - target: {fileID: 4774017656532866679, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: targetListenerType
+      value: SplitManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.521
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.472
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234905190720494556, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9113043229559834933, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
+      propertyPath: m_Name
+      value: SplitButton
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7f7192059fe77c941b5e563b5ed93625, type: 3}
 --- !u!1001 &325546838
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1522,6 +1587,7 @@ GameObject:
   - component: {fileID: 1086741115}
   - component: {fileID: 1086741114}
   - component: {fileID: 1086741116}
+  - component: {fileID: 1086741117}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -1577,6 +1643,23 @@ MonoBehaviour:
   controlledTiles:
   - {fileID: 568696595}
   - {fileID: 478215804}
+--- !u!114 &1086741117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086741113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edbe6d56373fadf48b1c3d791ed42a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SplitManager
+  playerController: {fileID: 1176157292}
+  segmentPrefab: {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
+  SwapAction: {fileID: 3323708303032864980, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  Segment1Offset: {x: -1, y: -0.5, z: 0}
+  Segment2Offset: {x: 1, y: -0.5, z: 0}
 --- !u!1001 &1108159580
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3353,3 +3436,4 @@ SceneRoots:
   - {fileID: 1751774194}
   - {fileID: 8073082013383359642}
   - {fileID: 7104450121562980612}
+  - {fileID: 322664283}

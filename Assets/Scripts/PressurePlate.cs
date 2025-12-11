@@ -1,5 +1,6 @@
-using UnityEngine;
 using DG.Tweening;
+using System.Diagnostics;
+using UnityEngine;
 
 public class PressurePlate : MonoBehaviour, ISwitchSource
 {
@@ -7,6 +8,10 @@ public class PressurePlate : MonoBehaviour, ISwitchSource
     [SerializeField] private GameObject linkedSystemObject;
     [SerializeField] private float pressDepth = 0.15f;
     [SerializeField] private float animDuration = 0.2f;
+
+    [Header("Target Component")]
+    [Tooltip("If linkedSystemObject has multiple listeners, specify the target script name (e.g., 'SplitManager', 'TogglableTiles').")]
+    [SerializeField] private string targetListenerType;
 
     private ISwitchListener linkedSystem;
     private Vector3 upPos;
@@ -19,7 +24,14 @@ public class PressurePlate : MonoBehaviour, ISwitchSource
         downPos = upPos - new Vector3(0, pressDepth, 0);
 
         if (linkedSystemObject != null)
-            linkedSystem = linkedSystemObject.GetComponent<ISwitchListener>();
+        {
+            if (!string.IsNullOrEmpty(targetListenerType))
+            {
+                linkedSystem = linkedSystemObject.GetComponent(targetListenerType) as ISwitchListener;
+            }
+            else linkedSystem = linkedSystemObject.GetComponent<ISwitchListener>();
+            
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -56,8 +68,17 @@ public class PressurePlate : MonoBehaviour, ISwitchSource
         }
     }
 
+    public void ForceExit()
+    {
+        objectsOnPlate = 0;
+        transform.DOKill();
+        transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
+        linkedSystem?.RemoveSwitch(this);
+    }
+
+
     private bool IsValidObject(Collider other)
     {
-        return other.CompareTag("Player") || other.CompareTag("Ghost");
+        return other.CompareTag("Player");
     }
 }
