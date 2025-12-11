@@ -1415,7 +1415,7 @@ GameObject:
   - component: {fileID: 762729067}
   - component: {fileID: 762729068}
   m_Layer: 0
-  m_Name: Square
+  m_Name: LevelBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1429,12 +1429,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 762729066}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0884, y: -0.168, z: 27.1}
-  m_LocalScale: {x: 1.3951615, y: 1.4617062, z: 1}
+  m_LocalRotation: {x: 0.32307673, y: 0.14762269, z: -0.08832305, w: 0.9306063}
+  m_LocalPosition: {x: 10.2492, y: -17.9728, z: 26.8416}
+  m_LocalScale: {x: 2.2151263, y: 2.2951717, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1152238644}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &762729068
 SpriteRenderer:
@@ -1488,7 +1488,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 7.68, y: 4.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -1893,8 +1893,7 @@ Transform:
   m_LocalPosition: {x: 2.887687, y: 4.2726088, z: 0.007657945}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 762729067}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 38.858, y: 16.233, z: -5.084}
 --- !u!1001 &1171807054
@@ -3251,6 +3250,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 762729067}
   - {fileID: 1152238644}
   - {fileID: 614631022}
   - {fileID: 1644176421}

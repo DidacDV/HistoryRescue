@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +33,20 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void Update()
+    {
+        if (Keyboard.current.digit0Key.wasPressedThisFrame) LoadDebugLevel(1);
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) LoadDebugLevel(2);
+        if (Keyboard.current.digit2Key.wasPressedThisFrame) LoadDebugLevel(3);
+        if (Keyboard.current.digit3Key.wasPressedThisFrame) LoadDebugLevel(4);
+        if (Keyboard.current.digit4Key.wasPressedThisFrame) LoadDebugLevel(5);
+        if (Keyboard.current.digit5Key.wasPressedThisFrame) LoadDebugLevel(6);
+        if (Keyboard.current.digit6Key.wasPressedThisFrame) LoadDebugLevel(7);
+        if (Keyboard.current.digit7Key.wasPressedThisFrame) LoadDebugLevel(8);
+        if (Keyboard.current.digit8Key.wasPressedThisFrame) LoadDebugLevel(9);
+        if (Keyboard.current.digit9Key.wasPressedThisFrame) LoadDebugLevel(10);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -109,6 +124,16 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Returning to Main Menu...");
         SceneManager.LoadScene("MainMenu");
+    }
+
+    void LoadDebugLevel(int levelNum)
+    {
+        currentLevel = levelNum;
+
+        string sceneName = "Level" + currentLevel + "Scene";
+
+        Debug.Log($"Debug loading: {sceneName}");
+        LoadLevel(sceneName);
     }
 
     void OnDestroy()

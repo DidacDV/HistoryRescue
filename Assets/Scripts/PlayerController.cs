@@ -62,7 +62,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            UIManager.Instance.OnEnterPause();
+            if (Time.timeScale == 0)
+                UIManager.Instance.OnResumeGamePress();
+            else
+                UIManager.Instance.OnEnterPause();
             return;
         }
 

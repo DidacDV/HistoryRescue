@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   nextLevelScene: Level9Scene
+  currentTheme: {fileID: 0}
+  backgroundSprite: {fileID: 0}
   playerCube: {fileID: 1176157292}
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
@@ -2207,7 +2209,7 @@ Camera:
   far clip plane: 1000.48
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2232,7 +2234,7 @@ Transform:
   m_GameObject: {fileID: 1152238640}
   serializedVersion: 2
   m_LocalRotation: {x: 0.32330257, y: 0.06512783, z: -0.04565473, w: 0.94294727}
-  m_LocalPosition: {x: 4.88, y: 7.4, z: -5.28}
+  m_LocalPosition: {x: 5.04, y: 8.39, z: -4.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

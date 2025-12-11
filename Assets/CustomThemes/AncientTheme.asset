@@ -15,5 +15,5 @@ MonoBehaviour:
   themeName: AncientTheme
   themeFont: {fileID: 11400000, guid: c2e082dfa66246f498a85670782e5cc0, type: 2}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  backgroundImage: {fileID: 21300000, guid: dbf1cccc43cc6ce408e27bcb1827dd02, type: 3}
+  backgroundImage: {fileID: 21300000, guid: e921b283ee2762d4ab57cfeb46878f81, type: 3}
   UIContainerImage: {fileID: 21300000, guid: bc06359feb82e024b8f1c45cda36b80c, type: 3}
