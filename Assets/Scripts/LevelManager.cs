@@ -1,7 +1,14 @@
+using System;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
     public string nextLevelScene; //name of next level scene
+    public LevelTheme currentTheme; //NULL if the current level keeps the same font, otherwise the new font to be set in the UI
+
+    public SpriteRenderer backgroundSprite;
+
     public PlayerController playerCube;
 
     [Header("Animation Components")]
@@ -26,9 +33,22 @@ public class LevelManager : MonoBehaviour {
             Debug.LogError("levelInitAnimations not set for level manager");
     }
 
+    void SetUpTheme()
+    {
+        if (currentTheme != null)
+        {
+            UIManager.Instance.ApplyTheme(currentTheme);
+            if (currentTheme.backgroundImage != null)
+                backgroundSprite.sprite = currentTheme.backgroundImage;
+        }
+        else
+            return;
+    }
+
     void Start() {
         SetUpPlayerEvents();
         PlayInitialAnimation();
+        SetUpTheme();
     }
 
     void OnPlayerFailed() {

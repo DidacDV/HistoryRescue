@@ -176,6 +176,18 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
     void Update()
     {
         UnityEngine.Debug.Log($"Update - bFalling: {bFalling}, isRolling: {isRolling}");
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (Time.timeScale == 0)
+                UIManager.Instance.OnResumeGamePress();
+            else
+                UIManager.Instance.OnEnterPause();
+            return;
+        }
+
+        //game is paused
+        if (Time.timeScale == 0) return;
+        
         if (bFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
