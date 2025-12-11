@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,12 +24,15 @@ public class UIManager : MonoBehaviour
     [Header("Theme options")]
     [SerializeField] private Image UIPanel;
 
+    [SerializeField] private GameObject PauseUI;
+
     void Awake()
     {
         //singleton pattern 
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -37,6 +41,21 @@ public class UIManager : MonoBehaviour
         }
 
         UpdateMovementText();
+
+        // Disable UI if starting in MainMenu
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            DisableUI();
+        }
+    }
+
+
+    public void InitUIVars()
+    {
+        Debug.Log("reseting UI");
+        ResetDifficultyImage();
+        ResetMovementCount();
+        PauseUI.SetActive(false);
     }
 
 
@@ -118,12 +137,37 @@ public class UIManager : MonoBehaviour
 
     public void DisableUI()
     {
+        Debug.Log("disabling ui");
         UICanvas.enabled = false;
     }
 
     public void EnableUI()
     {
+        Debug.Log("enabling ui");
         UICanvas.enabled = true;
+    }
+
+    #endregion
+
+    #region pause menu
+
+    public void OnResumeGamePress()
+    {
+        Time.timeScale = 1f;
+        PauseUI.SetActive(false);
+    }
+
+    public void OnBackToMenuPress()
+    {
+        Time.timeScale = 1;
+        PauseUI.SetActive(false);
+        GameManager.Instance.ReturnToMainMenu();
+    }
+
+    public void OnEnterPause()
+    {
+        PauseUI.SetActive(true);
+        Time.timeScale = 0;
     }
 
     #endregion
