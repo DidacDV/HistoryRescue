@@ -16,8 +16,6 @@ public class MenuAmination : MonoBehaviour
     public Transform visualContainer;
 
 
-    private bool hasLanded = false;
-    private int currentSkinIndex = 0;
     private GameObject currentModelInstance;
 
     void Start()
@@ -52,7 +50,6 @@ public class MenuAmination : MonoBehaviour
         }
 
         transform.position = landPosition;
-        hasLanded = true;
     }
 
     void LoadSkin(int index)
