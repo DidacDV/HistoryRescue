@@ -175,7 +175,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     void Update()
     {
-        UnityEngine.Debug.Log($"Update - bFalling: {bFalling}, isRolling: {isRolling}");
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (Time.timeScale == 0)
@@ -208,11 +207,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
 
             Vector2 input = moveAction.ReadValue<Vector2>();
-
-            if (input.sqrMagnitude > 0.1f)
-            {
-                Debug.Log($"Player received input: {input}");
-            }
 
             if (input.sqrMagnitude > 0.5f)
             {

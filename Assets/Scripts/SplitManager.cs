@@ -1,7 +1,16 @@
-using System.Collections;
-using System.Diagnostics;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+[System.Serializable]
+public class SplitGroup
+{
+    public List<BaseSwitch> controllingSwitches = new List<BaseSwitch>();
+    public Vector3 segment1Position = new Vector3(0.0f, 0.0f, 0.0f);
+    public Vector3 segment2Position = new Vector3(0.0f, 0.0f, 0.0f);
+
+    [HideInInspector] public int activeSwitchCount = 0;
+}
 
 public class SplitManager : MonoBehaviour, ISwitchListener
 {
@@ -10,12 +19,12 @@ public class SplitManager : MonoBehaviour, ISwitchListener
     public GameObject segmentPrefab;
 
     [Header("Settings")]
-    public InputActionReference SwapAction;
+    public InputActionReference swapAction;
 
-    [Header("Manual Split Offsets (Relative to Block Center)")]
-    public Vector3 Segment1Offset = new Vector3(-0.5f, 0.0f, 0.0f);
-    public Vector3 Segment2Offset = new Vector3(0.5f, 0.0f, 0.0f);
+    [Header("Split Groups")]
+    [SerializeField] private List<SplitGroup> splitGroups = new List<SplitGroup>();
 
+    private Dictionary<ISwitchSource, SplitGroup> sourceToGroupMap = new Dictionary<ISwitchSource, SplitGroup>();
     private bool isSplit = false;
     private GameObject segment1;
     private GameObject segment2;
@@ -25,26 +34,57 @@ public class SplitManager : MonoBehaviour, ISwitchListener
 
     void Awake()
     {
-        if (SwapAction != null && SwapAction.action != null)
+        foreach (var group in splitGroups)
         {
-            SwapAction.action.performed += OnSwapPerformed;
+            foreach (var switchSource in group.controllingSwitches)
+            {
+                if (switchSource != null)
+                {
+                    switchSource.AddListener(this);
+                    sourceToGroupMap[switchSource] = group;
+
+                    if (switchSource.GetState())
+                    {
+                        group.activeSwitchCount++;
+                    }
+                }
+            }
+        }
+
+        if (swapAction != null && swapAction.action != null)
+        {
+            swapAction.action.performed += OnSwapPerformed;
         }
     }
 
     void OnEnable()
     {
-        if (SwapAction != null && SwapAction.action != null)
+        if (swapAction != null && swapAction.action != null)
         {
-            SwapAction.action.Enable();
+            swapAction.action.Enable();
         }
     }
 
     void OnDisable()
     {
-        if (SwapAction != null && SwapAction.action != null)
+        if (swapAction != null && swapAction.action != null)
         {
-            SwapAction.action.performed -= OnSwapPerformed;
-            SwapAction.action.Disable();
+            swapAction.action.performed -= OnSwapPerformed;
+            swapAction.action.Disable();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var group in splitGroups)
+        {
+            foreach (var switchSource in group.controllingSwitches)
+            {
+                if (switchSource != null)
+                {
+                    switchSource.RemoveListener(this);
+                }
+            }
         }
     }
 
@@ -56,62 +96,69 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         }
     }
 
-    public void RegisterSwitch(ISwitchSource plate)
+    public void OnSwitchToggled(ISwitchSource source, bool state)
     {
-        UnityEngine.Debug.Log("SplitManager: RegisterSwitch called");
-        //if (playerController.IsRolling) return;
+        if (sourceToGroupMap.TryGetValue(source, out SplitGroup group))
+        {
+            bool wasActive = group.activeSwitchCount > 0;
 
-        if (!isSplit)
-        {
-            Split();
-        }
-        else
-        {
-            CheckForReconstitutionAndCombine();
+            if (state)
+            {
+                group.activeSwitchCount++;
+            }
+            else
+            {
+                group.activeSwitchCount--;
+            }
+
+            bool isActive = group.activeSwitchCount > 0;
+
+            if (!wasActive && isActive && !isSplit)
+            {
+                Split(group);
+            }
         }
     }
 
-    public void RemoveSwitch(ISwitchSource plate)
+    void Update()
     {
-    }
-
-    void Update() {
         if (isSplit)
         {
-            CheckForReconstitutionAndCombine();
+            CheckForReconstitution();
         }
     }
 
-    void Split()
+    void Split(SplitGroup group)
     {
         if (playerController == null || segmentPrefab == null) return;
-        PressurePlate[] allPlates = FindObjectsOfType<PressurePlate>();
-        foreach (var plate in allPlates)
+
+        BaseSwitch[] allSwitches = FindObjectsOfType<BaseSwitch>();
+        foreach (var switchObj in allSwitches)
         {
-            plate.ForceExit();
+            if (switchObj is PressurePlate plate)
+            {
+                plate.ForceRelease();
+            }
+            else if (switchObj is CrossPressurePlate crossPlate)
+            {
+                crossPlate.ForceRelease();
+            }
         }
-        // DISABLE PLAYER ACTION MAP
+
         var playerActionMap = InputSystem.actions.FindActionMap("Player");
         if (playerActionMap != null)
         {
             playerActionMap.Disable();
-            UnityEngine.Debug.Log("Disabled Player action map");
         }
 
-        // ENABLE SEGMENTS ACTION MAP
         var segmentsActionMap = InputSystem.actions.FindActionMap("Segments");
         if (segmentsActionMap != null)
         {
             segmentsActionMap.Enable();
-            UnityEngine.Debug.Log("Enabled Segments action map");
         }
 
-        Vector3 center = playerController.transform.position;
-        Vector3 pos1 = center + Segment1Offset;
-        Vector3 pos2 = center + Segment2Offset;
-
-        segment1 = Instantiate(segmentPrefab, pos1, Quaternion.identity);
-        segment2 = Instantiate(segmentPrefab, pos2, Quaternion.identity);
+        segment1 = Instantiate(segmentPrefab, group.segment1Position, Quaternion.identity);
+        segment2 = Instantiate(segmentPrefab, group.segment2Position, Quaternion.identity);
 
         segment1Controller = segment1.GetComponent<PlayerSegmentController>();
         segment2Controller = segment2.GetComponent<PlayerSegmentController>();
@@ -142,7 +189,7 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         }
     }
 
-    void CheckForReconstitutionAndCombine()
+    void CheckForReconstitution()
     {
         if (segment1 == null || segment2 == null) return;
 
@@ -152,47 +199,36 @@ public class SplitManager : MonoBehaviour, ISwitchListener
 
         float tolerance = 0.15f;
 
-        if (Mathf.Abs(diff.y) > tolerance)
-        {
-            return;
-        }
+        if (Mathf.Abs(diff.y) > tolerance) return;
 
         float horizontalDistance = Mathf.Sqrt(diff.x * diff.x + diff.z * diff.z);
 
         if (Mathf.Abs(horizontalDistance - 1.0f) > tolerance) return;
-        
-        bool alignedAlongX = Mathf.Abs(diff.z) < tolerance;
 
+        bool alignedAlongX = Mathf.Abs(diff.z) < tolerance;
         bool alignedAlongZ = Mathf.Abs(diff.x) < tolerance;
 
         if (alignedAlongX || alignedAlongZ)
         {
-            UnityEngine.Debug.Log("RECONSTITUTING NOW!");
             Reconstitute(pos1, pos2, alignedAlongZ);
         }
     }
 
     void Reconstitute(Vector3 pos1, Vector3 pos2, bool rotateForZ)
     {
-        // DISABLE SEGMENTS ACTION MAP
         var segmentsActionMap = InputSystem.actions.FindActionMap("Segments");
         if (segmentsActionMap != null)
         {
             segmentsActionMap.Disable();
-            UnityEngine.Debug.Log("Disabled Segments action map");
         }
 
-        // Destroy segments first to avoid interference
         Destroy(segment1);
         Destroy(segment2);
         segment1 = null;
         segment2 = null;
         currentControlledSegment = null;
 
-        // Calculate center position
         Vector3 newCenter = (pos1 + pos2) / 2f;
-
-        // Snap to grid
         newCenter.x = Mathf.Round(newCenter.x * 2f) / 2f;
         newCenter.z = Mathf.Round(newCenter.z * 2f) / 2f;
 
@@ -209,15 +245,12 @@ public class SplitManager : MonoBehaviour, ISwitchListener
             newCenter.y = 0.5f;
         }
 
-        // ENABLE PLAYER ACTION MAP FIRST (before SetActive)
         var playerActionMap = InputSystem.actions.FindActionMap("Player");
         if (playerActionMap != null)
         {
             playerActionMap.Enable();
-            UnityEngine.Debug.Log("Enabled Player action map");
         }
 
-        // NOW reactivate and position player
         playerController.gameObject.SetActive(true);
         playerController.ResetState();
 
@@ -225,7 +258,5 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         playerController.transform.rotation = newRotation;
 
         isSplit = false;
-
-        UnityEngine.Debug.Log($"SplitManager: Reconstituted player at {newCenter} with rotation {newRotation.eulerAngles}");
     }
 }

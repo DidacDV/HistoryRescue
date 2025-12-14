@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8381091475538720733}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0000037691207, y: -0.000015060999, z: -0.000024633728, w: 1}
+  m_LocalRotation: {x: 4.5653162e-10, y: -0.000017414575, z: -0.00002621549, w: 1}
   m_LocalPosition: {x: 8.488, y: -0.07, z: 4.483}
   m_LocalScale: {x: 0.14753, y: 0.06406776, z: 0.39644}
   m_ConstrainProportionsScale: 0
@@ -103,7 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ee64b5cde4fdd24dbc1a6325f13623f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrossPressurePlate
-  linkedSystemObject: {fileID: 0}
   pressDepth: 0.15
   animDuration: 0.2
   requiresUprightStance: 1
@@ -122,7 +121,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
