@@ -424,13 +424,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f08991dc9517d4cbccfd7972f84dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkinSelector
-  landPosition: {x: 1, y: 2.5, z: 30}
+  landPosition: {x: 0.6, y: 1.5, z: 30}
   startOffset: {x: 0, y: 10, z: 0}
   dropDuration: 1.5
   spinSpeed: 30
   initialZRotation: -40
   skinPrefabs:
   - {fileID: 7972835290445703987, guid: b445ee7cccd992e458e83714257f1fd6, type: 3}
+  changeInterval: 10
   visualContainer: {fileID: 1613680812}
 --- !u!1 &660895513
 GameObject:
@@ -1345,7 +1346,7 @@ GameObject:
   - component: {fileID: 1737293484}
   - component: {fileID: 1737293483}
   m_Layer: 0
-  m_Name: Left
+  m_Name: CubePivotLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1363,13 +1364,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f08991dc9517d4cbccfd7972f84dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkinSelector
-  landPosition: {x: -2, y: 3, z: 30}
+  landPosition: {x: -1, y: 1.5, z: 30}
   startOffset: {x: 0, y: 10, z: 0}
   dropDuration: 1.5
   spinSpeed: 30
   initialZRotation: 40
   skinPrefabs:
-  - {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
+  - {fileID: 4098767839256227503, guid: 6e83996e419f2254a8449c5c36f14787, type: 3}
+  changeInterval: 10
   visualContainer: {fileID: 1915150384}
 --- !u!4 &1737293484
 Transform:
@@ -1670,7 +1672,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Travel through history
+  m_text: Travel through time
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0475939b9589def489e4003145fb0710, type: 2}
   m_sharedMaterial: {fileID: 721405936554207317, guid: 0475939b9589def489e4003145fb0710, type: 2}
