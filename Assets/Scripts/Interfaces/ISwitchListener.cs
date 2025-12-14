@@ -1,10 +1,10 @@
 public interface ISwitchSource
 {
-
+    void AddListener(ISwitchListener listener);
+    void RemoveListener(ISwitchListener listener);
 }
 
 public interface ISwitchListener
 {
-    void RegisterSwitch(ISwitchSource source);
-    void RemoveSwitch(ISwitchSource source);
+    void OnSwitchToggled(ISwitchSource source, bool state);
 }

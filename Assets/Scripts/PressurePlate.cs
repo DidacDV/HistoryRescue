@@ -1,37 +1,21 @@
 using DG.Tweening;
-using System.Diagnostics;
 using UnityEngine;
 
-public class PressurePlate : MonoBehaviour, ISwitchSource
+public class PressurePlate : BaseSwitch
 {
     [Header("Settings")]
-    [SerializeField] private GameObject linkedSystemObject;
     [SerializeField] private float pressDepth = 0.15f;
     [SerializeField] private float animDuration = 0.2f;
 
-    [Header("Target Component")]
-    [Tooltip("If linkedSystemObject has multiple listeners, specify the target script name (e.g., 'SplitManager', 'TogglableTiles').")]
-    [SerializeField] private string targetListenerType;
-
-    private ISwitchListener linkedSystem;
     private Vector3 upPos;
     private Vector3 downPos;
     private int objectsOnPlate = 0;
+    private bool wasPressed = false;
 
     void Start()
     {
         upPos = transform.localPosition;
         downPos = upPos - new Vector3(0, pressDepth, 0);
-
-        if (linkedSystemObject != null)
-        {
-            if (!string.IsNullOrEmpty(targetListenerType))
-            {
-                linkedSystem = linkedSystemObject.GetComponent(targetListenerType) as ISwitchListener;
-            }
-            else linkedSystem = linkedSystemObject.GetComponent<ISwitchListener>();
-            
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,11 +25,12 @@ public class PressurePlate : MonoBehaviour, ISwitchSource
             objectsOnPlate++;
             if (objectsOnPlate == 1)
             {
-                // Animate Down
-                transform.DOKill();
-                transform.DOLocalMove(downPos, animDuration).SetEase(Ease.OutQuad);
-
-                linkedSystem?.RegisterSwitch(this);
+                if (!wasPressed)
+                {
+                    wasPressed = true;
+                    AnimateDown();
+                }
+                Toggle();
             }
         }
     }
@@ -58,24 +43,30 @@ public class PressurePlate : MonoBehaviour, ISwitchSource
             if (objectsOnPlate <= 0)
             {
                 objectsOnPlate = 0;
-
-                // Animate Up
-                transform.DOKill();
-                transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
-
-                linkedSystem?.RemoveSwitch(this);
+                wasPressed = false;
+                AnimateUp();
             }
         }
     }
 
-    public void ForceExit()
+    public void ForceRelease()
     {
         objectsOnPlate = 0;
-        transform.DOKill();
-        transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
-        linkedSystem?.RemoveSwitch(this);
+        wasPressed = false;
+        AnimateUp();
     }
 
+    private void AnimateDown()
+    {
+        transform.DOKill();
+        transform.DOLocalMove(downPos, animDuration).SetEase(Ease.OutQuad);
+    }
+
+    private void AnimateUp()
+    {
+        transform.DOKill();
+        transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
+    }
 
     private bool IsValidObject(Collider other)
     {

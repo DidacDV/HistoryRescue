@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 15248792}
   - component: {fileID: 15248791}
+  - component: {fileID: 15248793}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -149,6 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   nextLevelScene: Level9Scene
+  currentTheme: {fileID: 0}
+  backgroundSprite: {fileID: 0}
   playerCube: {fileID: 1176157292}
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
@@ -168,6 +171,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &15248793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15248790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edbe6d56373fadf48b1c3d791ed42a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SplitManager
+  playerController: {fileID: 1176157292}
+  segmentPrefab: {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
+  swapAction: {fileID: 3323708303032864980, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  splitGroups:
+  - controllingSwitches:
+    - {fileID: 1485890909}
+    segment1Position: {x: 10.5, y: 0.5, z: 7.5}
+    segment2Position: {x: 10.5, y: 0.5, z: 1.5}
+    activeSwitchCount: 0
 --- !u!1001 &15588301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1094,9 +1118,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: cat
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 455a3cebd469723459daa62c7f058ac6, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 455a3cebd469723459daa62c7f058ac6, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 455a3cebd469723459daa62c7f058ac6, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2809,9 +2841,10 @@ GameObject:
   - component: {fileID: 1176157294}
   - component: {fileID: 1176157293}
   - component: {fileID: 1176157292}
+  - component: {fileID: 1176157297}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2938,6 +2971,33 @@ Transform:
   - {fileID: 1268343673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!54 &1176157297
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176157291}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1198458728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3212,6 +3272,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 1300989629}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1358714177
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.0000037691207
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.000015060999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.000024633728
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -0.003
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381091475538720733, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: m_Name
+      value: CrossPressurePlate
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
 --- !u!1001 &1395148384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3584,6 +3701,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 1482968032}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1485890909 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4435740034103117596, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+  m_PrefabInstance: {fileID: 1358714177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee64b5cde4fdd24dbc1a6325f13623f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrossPressurePlate
 --- !u!1001 &1496528984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5120,3 +5248,4 @@ SceneRoots:
   - {fileID: 367915370}
   - {fileID: 177701722}
   - {fileID: 170143463}
+  - {fileID: 1358714177}

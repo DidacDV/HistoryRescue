@@ -1,7 +1,8 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections.Generic;
 
-public class CrossPressurePlate : MonoBehaviour, ISwitchSource
+public class CrossPressurePlate : BaseSwitch
 {
     public interface IStandingChecker
     {
@@ -9,100 +10,112 @@ public class CrossPressurePlate : MonoBehaviour, ISwitchSource
     }
 
     [Header("Settings")]
-    [SerializeField] private GameObject linkedSystemObject;
     [SerializeField] private float pressDepth = 0.15f;
     [SerializeField] private float animDuration = 0.2f;
 
     [Header("Standing Check")]
     [SerializeField] private bool requiresUprightStance = true;
 
-    private ISwitchListener linkedSystem;
     private Vector3 upPos;
     private Vector3 downPos;
-    private int uprightObjectsOnPlate = 0; // Tracks objects currently standing upright on the plate
-
-    // We don't need to track the state perfectly with a hashset here, 
-    // we use the single counter and rely on OnTriggerStay for validation.
+    private Dictionary<Collider, bool> pressingObjects = new Dictionary<Collider, bool>();
+    private bool wasPressed = false;
 
     void Start()
     {
         upPos = transform.localPosition;
         downPos = upPos - new Vector3(0, pressDepth, 0);
+    }
 
-        if (linkedSystemObject != null)
-            linkedSystem = linkedSystemObject.GetComponent<ISwitchListener>();
-
-        if (GetComponent<Collider>() is Collider plateCol)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (IsValidObject(other))
         {
-            plateCol.isTrigger = true;
+            pressingObjects[other] = IsStandingUpright(other);
+            CheckToggle();
         }
     }
 
-    // New activation event: Checks state every frame while the player is inside.
     private void OnTriggerStay(Collider other)
     {
-        if (!IsValidObject(other)) return;
+        if (!pressingObjects.ContainsKey(other)) return;
 
-        // Check 1: Is the plate currently active? (uprightObjectsOnPlate > 0)
-        // Check 2: Does the player meet the standing requirement?
-        bool isCurrentlyUpright = IsStandingUpright(other);
+        bool wasUpright = pressingObjects[other];
+        bool isUpright = IsStandingUpright(other);
 
-        if (requiresUprightStance && !isCurrentlyUpright)
+        if (wasUpright != isUpright)
         {
-            // If the player is on the plate but is NOT upright, do nothing.
-            return;
-        }
-
-        // If the player is upright (or standing is not required) and we haven't registered them yet:
-        if (uprightObjectsOnPlate == 0)
-        {
-            uprightObjectsOnPlate = 1;
-
-            // Animate Down
-            transform.DOKill();
-            transform.DOLocalMove(downPos, animDuration).SetEase(Ease.OutQuad);
-
-            linkedSystem?.RegisterSwitch(this);
+            pressingObjects[other] = isUpright;
+            CheckToggle();
         }
     }
 
-    // Deactivation event: Player is leaving the tile.
     private void OnTriggerExit(Collider other)
     {
-        if (!IsValidObject(other)) return;
-
-        // If the plate was active due to an upright player, deactivate it immediately.
-        if (uprightObjectsOnPlate > 0)
+        if (pressingObjects.ContainsKey(other))
         {
-            uprightObjectsOnPlate = 0;
-
-            // Animate Up
-            transform.DOKill();
-            transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
-
-            linkedSystem?.RemoveSwitch(this);
+            pressingObjects.Remove(other);
+            if (pressingObjects.Count == 0)
+            {
+                wasPressed = false;
+                AnimateUp();
+            }
         }
     }
 
-    // Remove the unused OnTriggerEnter
-    /* private void OnTriggerEnter(Collider other) { } */
+    private void CheckToggle()
+    {
+        int validCount = 0;
+        foreach (var kvp in pressingObjects)
+        {
+            if (!requiresUprightStance || kvp.Value)
+            {
+                validCount++;
+            }
+        }
+
+        if (validCount > 0)
+        {
+            if (!wasPressed)
+            {
+                wasPressed = true;
+                AnimateDown();
+            }
+            Toggle();
+        }
+    }
+
+    public void ForceRelease()
+    {
+        pressingObjects.Clear();
+        wasPressed = false;
+        AnimateUp();
+    }
+
+    private void AnimateDown()
+    {
+        transform.DOKill();
+        transform.DOLocalMove(downPos, animDuration).SetEase(Ease.OutQuad);
+    }
+
+    private void AnimateUp()
+    {
+        transform.DOKill();
+        transform.DOLocalMove(upPos, animDuration).SetEase(Ease.OutQuad);
+    }
 
     private bool IsValidObject(Collider other)
     {
-        return other.CompareTag("Player") || other.CompareTag("Ghost");
+        return other.CompareTag("Player");
     }
 
     private bool IsStandingUpright(Collider other)
     {
         IStandingChecker standingChecker = other.GetComponentInParent<IStandingChecker>();
-
         if (standingChecker != null)
         {
             return standingChecker.IsStandingUpright();
         }
-        else
-        {
-            return other.bounds.size.y > 1.5f;
-        }
+        return other.bounds.size.y > 1.5f;
     }
 }
