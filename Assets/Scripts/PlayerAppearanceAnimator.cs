@@ -6,8 +6,8 @@ using UnityEngine.Experimental.GlobalIllumination;
 //player's entrance animation when a level starts
 public class PlayerAppearanceAnimator : MonoBehaviour {
     [Header("Player appareance settings")]
-    public float startYPlayerOffset = 6f; //how far UP the player starts
-    public float fallingSpeed = 0.5f;
+    public float startYPlayerOffset = 15f; //how far UP the player starts
+    public float fallingSpeed = 0.7f;
 
     public float targetYPosition; //set to the start position, so the player cube should be left in the correct initial position at the scene
     public Vector3 startPosition;
