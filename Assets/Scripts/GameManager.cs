@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.InputSystem;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             // Check initial scene
-            if (SceneManager.GetActiveScene().name == "MainMenu")
+            if (SceneManager.GetActiveScene().name == "MainMenu" || SceneManager.GetActiveScene().name == "VictoryScreen")
             {
                 if (UIManager.Instance != null)
                     UIManager.Instance.DisableUI();
@@ -57,14 +58,15 @@ public class GameManager : MonoBehaviour
             Debug.Log($"current level:{currentLevelName}");
         }
 
-        if (scene.name == "MainMenu")
+        if (scene.name == "MainMenu" || scene.name == "VictoryScreen")
         {
             if (UIManager.Instance != null)
                 UIManager.Instance.DisableUI();
         }
         else
         {
-            if (scene.name == "Persistent") return;
+            Debug.Log(scene.name);
+            if (scene.name == "Persistent" || scene.name == "VictoryScreen") return;
             if (UIManager.Instance != null)
                 UIManager.Instance.EnableUI();
         }
