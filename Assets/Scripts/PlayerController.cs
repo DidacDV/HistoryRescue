@@ -33,7 +33,9 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     public Transform ghostPlayer; 
     public Transform ghostPivot;
-
+    public GameObject fallTriggerObject; 
+    private Rigidbody playerRigidbody;
+    private bool bCommitToFall = false;
     public bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
 
     public bool IsRolling { get { return isRolling; } }
@@ -73,6 +75,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         bottomCenter /= 4f;
 
         int validHits = 0;
+        int victoryHits = 0; // NEW: Track hits on the victory hole
         float inset = 0.15f;
 
         foreach (var p in bottomCorners)
@@ -83,43 +86,53 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
             RaycastHit hit;
 
-            // Note: We use 'layerMask' here. 
-            // YOUR VICTORY HOLE OBJECT MUST BE ON THE 'GROUND' LAYER for this to hit!
-            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 1.0f, layerMask)) // Increased distance to 1.0f to be safe
+            // NOTE: We temporarily disable the layerMask here to see EVERYTHING beneath the corner.
+            if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 1.0f))
             {
-                // IT IS SAFE IF:
-                // 1. We hit a normal ground tile
-                // 2. OR We hit the "LevelPass" object
-                if (hit.collider.CompareTag("LevelPass") || ((1 << hit.collider.gameObject.layer) & layerMask) != 0)
+                if (hit.collider.CompareTag("LevelPass"))
+                {
+                    victoryHits++; // Count hits on the victory hole
+                    validHits++;   // Count it as a 'safe' hit for the 4-corner count
+                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.yellow, 2.0f); // Yellow for victory
+                }
+                // Check if we hit the actual ground layer
+                else if (((1 << hit.collider.gameObject.layer) & layerMask) != 0)
                 {
                     validHits++;
                     Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.green, 2.0f);
                 }
+                else
+                {
+                    // Hit something, but it's not Ground and not LevelPass. This is UNSAFE.
+                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.red, 2.0f);
+                }
             }
             else
             {
+                // Ray hit NOTHING! (Empty space) -> UNSAFE
                 Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.red, 2.0f);
-
-                // --- ADD THIS DEBUGGING BLOCK ---
-                RaycastHit debugHit;
-                // Cast a ray without the layer mask to see what we are ACTUALLY hitting
-                if (Physics.Raycast(rayOrigin, Vector3.down, out debugHit, 1.0f))
-                {
-                    Debug.Log($"Ray hit '{debugHit.collider.name}' but failed because:");
-                    if (((1 << debugHit.collider.gameObject.layer) & layerMask) == 0)
-                        Debug.Log($"- Wrong Layer! It is on '{LayerMask.LayerToName(debugHit.collider.gameObject.layer)}' but we need 'Ground'.");
-                    if (!debugHit.collider.CompareTag("LevelPass"))
-                        Debug.Log($"- Wrong Tag! It is tagged '{debugHit.collider.tag}' but we need 'LevelPass'.");
-                }
-                else
-                {
-                    Debug.Log("Ray hit NOTHING! (Empty space)");
-                }
-                // -----------------------------
             }
         }
 
-        return validHits == 4;
+        // FINAL CHECK:
+
+        // If the cube is positioned completely over the LevelPass object (4 hits), 
+        // it must be safe, regardless of other tiles.
+        if (victoryHits == 4)
+        {
+            Debug.Log("Move is safe: Landing perfectly on Victory Hole.");
+            return true;
+        }
+
+        // If we rely on solid ground, all four corner rays must hit solid ground or the LevelPass object.
+        if (validHits == 4)
+        {
+            Debug.Log("Move is safe: Landing on solid ground.");
+            return true;
+        }
+
+        // If we didn't meet the 4-hit requirement, the move is unsafe.
+        return false;
     }
 
     void Awake()
@@ -128,7 +141,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         moveAction = InputSystem.actions.FindAction("Move");
         layerMask = LayerMask.GetMask("Ground");
         m_Collider = GetComponent<Collider>();
-
+        playerRigidbody = GetComponent<Rigidbody>();
         pivot = new GameObject("RotationPivot").transform;
         ghostPivot = new GameObject("GhostPivot").transform;
 
@@ -145,6 +158,11 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
             ghostCol.isTrigger = true;
             ghostObj.SetActive(true);
+        }
+
+        if (fallTriggerObject != null)
+        {
+            fallTriggerObject.SetActive(false);
         }
     }
 
@@ -186,7 +204,13 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
         //game is paused
         if (Time.timeScale == 0) return;
-        
+
+        if (bCommitToFall)
+        {
+            if (transform.position.y < -5.0f) HandleFalling();
+            return; // Let physics handle position/rotation
+        }
+
         if (bFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime, Space.World);
@@ -227,6 +251,39 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                 }
             }
         }
+    }
+
+    void StartFallingFromUnsafeRoll()
+    {
+        bCommitToFall = true;
+        bFalling = true;
+
+        if (fallTriggerObject != null)
+        {
+            float currentHalfHeight = m_Collider.bounds.extents.y;
+
+            Vector3 topCenter = transform.position + (transform.up * currentHalfHeight);
+
+            fallTriggerObject.transform.position = topCenter;
+            fallTriggerObject.transform.parent = this.transform;
+
+            Rigidbody fallTriggerRB = fallTriggerObject.GetComponent<Rigidbody>();
+            if (fallTriggerRB != null)
+            {
+                fallTriggerRB.mass = 500f;
+                fallTriggerRB.isKinematic = false;
+                fallTriggerRB.useGravity = true;
+            }
+            fallTriggerObject.SetActive(true);
+        }
+
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.isKinematic = false;
+            playerRigidbody.useGravity = true;
+        }
+
+        if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
     }
 
     // Check if we're over the victory hole and in correct position
@@ -331,40 +388,69 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
         pivot.position = pivotPosition;
 
+        // 1. Setup the ghost to check the FINAL position/rotation
         CopyTransformData(transform, ghostPlayer);
+
+        // Rotate the ghost 90 degrees to simulate the final landing spot
         ghostPlayer.RotateAround(pivotPosition, axis, angle);
 
         Physics.SyncTransforms();
 
-        //bool isSafe = IsMoveSafe(ghostPlayer);
-        //if (!isSafe)
-        //{
-        //    Debug.Log("Prohibited Move detected! Position is unstable.");
-        //    isRolling = false;
-        //    yield break;
-        //}
+        // 2. Perform the PRE-ROLL SAFETY CHECK on the final ghost position
+        bool isSafe = IsMoveSafe(ghostPlayer);
+        if (!isSafe)
+        {
+            // Log the failure, but continue the roll animation.
+            Debug.LogWarning("Pre-Roll FAILURE detected! Final landing is unstable. Roll will proceed and commit to fall mid-way.");
+        }
+
+        // Safety check passed: store final ghost state for perfect snapping later
+        Quaternion finalRotation = ghostPlayer.rotation;
+        Vector3 finalPos = ghostPlayer.position;
+
+        // Restore the ghost back to original state to prevent issues if it's reused
+        CopyTransformData(transform, ghostPlayer);
+
         float elapsedTime = 0f;
+        bool committed = false;
 
         UIManager.Instance.IncrementMovement();
         isRolling = true;
+        bCommitToFall = false;
 
         while (elapsedTime < rollDuration)
         {
             elapsedTime += Time.deltaTime;
-
+            float progress = elapsedTime / rollDuration;
             float rotationRate = angle * (Time.deltaTime / rollDuration);
 
             transform.RotateAround(pivotPosition, axis, rotationRate);
+
+            // COMMIT POINT: Once we reach 50% of the roll (45 degrees)
+            if (!committed && progress >= 0.8f && !isSafe)
+            {
+                committed = true;
+                Debug.Log("Roll halfway done. Committing movement to physics for landing/fall.");
+
+                // Activate physics control. Whether it lands or falls off is now determined by Unity's physics.
+                StartFallingFromUnsafeRoll();
+                isRolling = false;
+                yield break; // Exit the coroutine
+            }
+
             yield return null;
         }
 
-        transform.rotation = ghostPlayer.rotation;
+        // 3. Post-Roll Snapping: Use the pre-calculated final state for perfect snap
 
-        Vector3 finalPos = ghostPlayer.position;
+        // Snap rotation
+        transform.rotation = finalRotation;
 
+        // Snap position (using the pre-calculated finalPos)
         float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
         float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
 
+        // Recalculate current height based on final rotation to handle rotation changes
         float currentHeight = 1.0f;
         Vector3 size = transform.lossyScale;
 
@@ -377,7 +463,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         isRolling = false;
         CheckVictoryHole();
     }
-
 
     public void CopyTransformData(Transform source, Transform target)
     {
