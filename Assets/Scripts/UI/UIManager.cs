@@ -11,18 +11,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI movementCountValueText;
     [SerializeField] private TextMeshProUGUI movementCountLabel;
 
-    [SerializeField] private TextMeshProUGUI leveLabel;
-    [SerializeField] private Image levelDifficultyImage;
+    [SerializeField] private TextMeshProUGUI levelLabel;
+    [SerializeField] private TextMeshProUGUI levelValue;
     private int movementCount = 0;
 
     [Header("Difficulty Settings")]
     [SerializeField] private Sprite[] difficultySprites;
-    private int currentDifficultyIndex = 0;
 
     [SerializeField] private Canvas UICanvas;
 
     [Header("Theme options")]
     [SerializeField] private Image UIPanel;
+    [SerializeField] private Image UIPanelLogo;
 
     [SerializeField] private GameObject PauseUI;
 
@@ -53,7 +53,6 @@ public class UIManager : MonoBehaviour
     public void InitUIVars()
     {
         Debug.Log("reseting UI");
-        ResetDifficultyImage();
         ResetMovementCount();
         PauseUI.SetActive(false);
     }
@@ -89,34 +88,6 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
-    #region Level Image Difficulty
-
-    public void IncrementDifficultyImage()
-    {
-        currentDifficultyIndex = (currentDifficultyIndex + 1) % difficultySprites.Length;
-        levelDifficultyImage.sprite = difficultySprites[currentDifficultyIndex];
-    }
-
-    public void ResetDifficultyImage()
-    {
-        currentDifficultyIndex = 0;
-        levelDifficultyImage.sprite = difficultySprites[0];
-    }
-
-    public void SetDifficultyImage(int levelIndex)
-    {
-        if (levelIndex >= 0 && levelIndex < difficultySprites.Length)
-        {
-            currentDifficultyIndex = levelIndex;
-            levelDifficultyImage.sprite = difficultySprites[levelIndex];
-        }
-        else
-        {
-            Debug.LogWarning("Invalid level index for difficulty image.");
-        }
-    }
-    #endregion
-
     #region theme
 
     public void ApplyTheme(LevelTheme theme)
@@ -124,11 +95,22 @@ public class UIManager : MonoBehaviour
         if (theme.themeFont != null)
         {
             movementCountLabel.font = theme.themeFont;
-            leveLabel.font = theme.themeFont;
+            levelLabel.font = theme.themeFont;
             movementCountValueText.font = theme.themeFont;
+            levelValue.font = theme.themeFont;
         }
         if (theme.UIContainerImage != null)
             UIPanel.sprite = theme.UIContainerImage;
+        if (theme.UILogoImage != null)
+            UIPanelLogo.sprite = theme.UILogoImage;
+        if (theme.stageName != null)
+            levelValue.text = theme.stageName;
+        else levelValue.text = "Floating";
+
+        levelValue.fontSize = theme.fontSize;
+        levelLabel.fontSize = theme.fontSize;
+        movementCountValueText.fontSize = theme.fontSize;
+        movementCountLabel.fontSize = theme.fontSize;
     }
 
     #endregion
