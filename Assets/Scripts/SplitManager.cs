@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,257 +7,130 @@ using UnityEngine.InputSystem;
 public class SplitGroup
 {
     public List<BaseSwitch> controllingSwitches = new List<BaseSwitch>();
-    public Vector3 segment1Position = new Vector3(0.0f, 0.0f, 0.0f);
-    public Vector3 segment2Position = new Vector3(0.0f, 0.0f, 0.0f);
-
+    public GameObject tile1;
+    public GameObject tile2;
     [HideInInspector] public int activeSwitchCount = 0;
 }
 
 public class SplitManager : MonoBehaviour, ISwitchListener
 {
-    [Header("References")]
     public PlayerController playerController;
     public GameObject segmentPrefab;
-
-    [Header("Settings")]
     public InputActionReference swapAction;
-
-    [Header("Split Groups")]
     [SerializeField] private List<SplitGroup> splitGroups = new List<SplitGroup>();
 
     private Dictionary<ISwitchSource, SplitGroup> sourceToGroupMap = new Dictionary<ISwitchSource, SplitGroup>();
     private bool isSplit = false;
-    private GameObject segment1;
-    private GameObject segment2;
-    private PlayerSegmentController segment1Controller;
-    private PlayerSegmentController segment2Controller;
+    private GameObject segment1, segment2;
+    private PlayerSegmentController segment1Controller, segment2Controller;
     private GameObject currentControlledSegment;
 
     void Awake()
     {
         foreach (var group in splitGroups)
         {
-            foreach (var switchSource in group.controllingSwitches)
+            foreach (var s in group.controllingSwitches)
             {
-                if (switchSource != null)
-                {
-                    switchSource.AddListener(this);
-                    sourceToGroupMap[switchSource] = group;
-
-                    if (switchSource.GetState())
-                    {
-                        group.activeSwitchCount++;
-                    }
-                }
+                if (s == null) continue;
+                s.AddListener(this);
+                sourceToGroupMap[s] = group;
+                if (s.GetState()) group.activeSwitchCount++;
             }
         }
-
-        if (swapAction != null && swapAction.action != null)
-        {
-            swapAction.action.performed += OnSwapPerformed;
-        }
+        if (swapAction?.action != null) swapAction.action.performed += OnSwapPerformed;
     }
 
-    void OnEnable()
-    {
-        if (swapAction != null && swapAction.action != null)
-        {
-            swapAction.action.Enable();
-        }
-    }
-
-    void OnDisable()
-    {
-        if (swapAction != null && swapAction.action != null)
-        {
-            swapAction.action.performed -= OnSwapPerformed;
-            swapAction.action.Disable();
-        }
-    }
-
-    private void OnDestroy()
-    {
-        foreach (var group in splitGroups)
-        {
-            foreach (var switchSource in group.controllingSwitches)
-            {
-                if (switchSource != null)
-                {
-                    switchSource.RemoveListener(this);
-                }
-            }
-        }
-    }
-
-    private void OnSwapPerformed(InputAction.CallbackContext context)
-    {
-        if (isSplit)
-        {
-            SwapControl();
-        }
-    }
+    void OnEnable() => swapAction?.action?.Enable();
+    void OnDisable() => swapAction?.action?.Disable();
 
     public void OnSwitchToggled(ISwitchSource source, bool state)
     {
-        if (sourceToGroupMap.TryGetValue(source, out SplitGroup group))
-        {
-            bool wasActive = group.activeSwitchCount > 0;
+        if (!sourceToGroupMap.TryGetValue(source, out SplitGroup group)) return;
 
-            if (state)
-            {
-                group.activeSwitchCount++;
-            }
-            else
-            {
-                group.activeSwitchCount--;
-            }
+        bool wasActive = group.activeSwitchCount > 0;
+        group.activeSwitchCount += state ? 1 : -1;
 
-            bool isActive = group.activeSwitchCount > 0;
-
-            if (!wasActive && isActive && !isSplit)
-            {
-                Split(group);
-            }
-        }
-    }
-
-    void Update()
-    {
-        if (isSplit)
-        {
-            CheckForReconstitution();
-        }
+        if (!wasActive && group.activeSwitchCount > 0 && !isSplit) Split(group);
     }
 
     void Split(SplitGroup group)
     {
-        if (playerController == null || segmentPrefab == null) return;
+        if (playerController == null || segmentPrefab == null || group.tile1 == null || group.tile2 == null) return;
 
-        BaseSwitch[] allSwitches = FindObjectsOfType<BaseSwitch>();
-        foreach (var switchObj in allSwitches)
+        var allSwitches = UnityEngine.Object.FindObjectsByType<BaseSwitch>(FindObjectsSortMode.None);
+        foreach (var s in allSwitches)
         {
-            if (switchObj is PressurePlate plate)
-            {
-                plate.ForceRelease();
-            }
-            else if (switchObj is CrossPressurePlate crossPlate)
-            {
-                crossPlate.ForceRelease();
-            }
+            if (s is PressurePlate p) p.ForceRelease();
+            else if (s is CrossPressurePlate cp) cp.ForceRelease();
         }
 
-        var playerActionMap = InputSystem.actions.FindActionMap("Player");
-        if (playerActionMap != null)
-        {
-            playerActionMap.Disable();
-        }
+        InputSystem.actions.FindActionMap("Player")?.Disable();
+        InputSystem.actions.FindActionMap("Segments")?.Enable();
 
-        var segmentsActionMap = InputSystem.actions.FindActionMap("Segments");
-        if (segmentsActionMap != null)
-        {
-            segmentsActionMap.Enable();
-        }
+        Vector3 p1 = group.tile1.transform.position + new Vector3(0, 0.65f, 0);
+        Vector3 p2 = group.tile2.transform.position + new Vector3(0, 0.65f, 0);
 
-        segment1 = Instantiate(segmentPrefab, group.segment1Position, Quaternion.identity);
-        segment2 = Instantiate(segmentPrefab, group.segment2Position, Quaternion.identity);
+        segment1 = Instantiate(segmentPrefab, p1, Quaternion.identity);
+        segment2 = Instantiate(segmentPrefab, p2, Quaternion.identity);
 
+        if (segment1.TryGetComponent(out Rigidbody rb1)) { rb1.position = p1; rb1.linearVelocity = Vector3.zero; }
+        if (segment2.TryGetComponent(out Rigidbody rb2)) { rb2.position = p2; rb2.linearVelocity = Vector3.zero; }
+
+        // GET COMPONENTS FIRST
         segment1Controller = segment1.GetComponent<PlayerSegmentController>();
         segment2Controller = segment2.GetComponent<PlayerSegmentController>();
+
+        // NOW REGISTER THEM (They aren't null anymore)
+        LevelManager levelMan = UnityEngine.Object.FindAnyObjectByType<LevelManager>();
+        if (levelMan != null)
+        {
+            levelMan.RegisterSegment(segment1Controller);
+            levelMan.RegisterSegment(segment2Controller);
+        }
+
         segment1Controller.OtherSegment = segment2.transform;
         segment2Controller.OtherSegment = segment1.transform;
-
-        currentControlledSegment = segment1;
         segment1Controller.SetControl(true);
         segment2Controller.SetControl(false);
+        currentControlledSegment = segment1;
 
         playerController.gameObject.SetActive(false);
         isSplit = true;
     }
 
+    void Update(){ if (isSplit) CheckForReconstitution();}
+
+    private void OnSwapPerformed(InputAction.CallbackContext context) { if (isSplit) SwapControl(); }
+
     void SwapControl()
     {
-        if (currentControlledSegment == segment1)
-        {
-            segment1Controller.SetControl(false);
-            segment2Controller.SetControl(true);
-            currentControlledSegment = segment2;
-        }
-        else
-        {
-            segment2Controller.SetControl(false);
-            segment1Controller.SetControl(true);
-            currentControlledSegment = segment1;
-        }
+        bool isSeg1 = currentControlledSegment == segment1;
+        segment1Controller.SetControl(!isSeg1);
+        segment2Controller.SetControl(isSeg1);
+        currentControlledSegment = isSeg1 ? segment2 : segment1;
     }
 
     void CheckForReconstitution()
     {
         if (segment1 == null || segment2 == null) return;
-
-        Vector3 pos1 = segment1.transform.position;
-        Vector3 pos2 = segment2.transform.position;
-        Vector3 diff = pos1 - pos2;
-
-        float tolerance = 0.15f;
-
-        if (Mathf.Abs(diff.y) > tolerance) return;
-
-        float horizontalDistance = Mathf.Sqrt(diff.x * diff.x + diff.z * diff.z);
-
-        if (Mathf.Abs(horizontalDistance - 1.0f) > tolerance) return;
-
-        bool alignedAlongX = Mathf.Abs(diff.z) < tolerance;
-        bool alignedAlongZ = Mathf.Abs(diff.x) < tolerance;
-
-        if (alignedAlongX || alignedAlongZ)
-        {
-            Reconstitute(pos1, pos2, alignedAlongZ);
-        }
+        Vector3 diff = segment1.transform.position - segment2.transform.position;
+        if (Mathf.Abs(diff.y) > 0.15f) return;
+        if (Mathf.Abs(new Vector2(diff.x, diff.z).magnitude - 1.0f) > 0.15f) return;
+        if (Mathf.Abs(diff.x) < 0.15f || Mathf.Abs(diff.z) < 0.15f) Reconstitute(segment1.transform.position, segment2.transform.position, Mathf.Abs(diff.x) < 0.15f);
     }
 
-    void Reconstitute(Vector3 pos1, Vector3 pos2, bool rotateForZ)
+    void Reconstitute(Vector3 p1, Vector3 p2, bool rotateForZ)
     {
-        var segmentsActionMap = InputSystem.actions.FindActionMap("Segments");
-        if (segmentsActionMap != null)
-        {
-            segmentsActionMap.Disable();
-        }
+        InputSystem.actions.FindActionMap("Segments")?.Disable();
+        Destroy(segment1); Destroy(segment2);
 
-        Destroy(segment1);
-        Destroy(segment2);
-        segment1 = null;
-        segment2 = null;
-        currentControlledSegment = null;
-
-        Vector3 newCenter = (pos1 + pos2) / 2f;
-        newCenter.x = Mathf.Round(newCenter.x * 2f) / 2f;
-        newCenter.z = Mathf.Round(newCenter.z * 2f) / 2f;
-
-        Quaternion newRotation;
-
-        if (rotateForZ)
-        {
-            newRotation = Quaternion.Euler(90, 0, 0);
-            newCenter.y = 0.5f;
-        }
-        else
-        {
-            newRotation = Quaternion.Euler(0, 0, 90);
-            newCenter.y = 0.5f;
-        }
-
-        var playerActionMap = InputSystem.actions.FindActionMap("Player");
-        if (playerActionMap != null)
-        {
-            playerActionMap.Enable();
-        }
+        Vector3 center = (p1 + p2) / 2f;
+        center.y = 0.5f;
 
         playerController.gameObject.SetActive(true);
+        playerController.transform.SetPositionAndRotation(center, rotateForZ ? Quaternion.Euler(90, 0, 0) : Quaternion.Euler(0, 0, 90));
         playerController.ResetState();
-
-        playerController.transform.position = newCenter;
-        playerController.transform.rotation = newRotation;
-
+        InputSystem.actions.FindActionMap("Player")?.Enable();
         isSplit = false;
     }
 }

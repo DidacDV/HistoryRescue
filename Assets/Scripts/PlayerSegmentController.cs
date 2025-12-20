@@ -9,6 +9,7 @@ public class PlayerSegmentController : MonoBehaviour
     [HideInInspector] public Transform OtherSegment;
     public enum Direction { None, Forward, Backward, Left, Right }
 
+    
     public float rotSpeed = 360f;
     public float fallSpeed = 5f;
     public LayerMask layerMask;
@@ -57,6 +58,17 @@ public class PlayerSegmentController : MonoBehaviour
 
     void Update()
     {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (Time.timeScale == 0)
+                UIManager.Instance.OnResumeGamePress();
+            else
+                UIManager.Instance.OnEnterPause();
+            return;
+        }
+        //game is paused
+        if (Time.timeScale == 0) return;
+
         if (hasControl && !isRolling && !bFalling)
         {
             CheckGroundAndFall();
@@ -123,7 +135,7 @@ public class PlayerSegmentController : MonoBehaviour
 
         Vector3 targetCenter = transform.position + directionVector;
         targetCenter.y = 0.5f;
-
+        UIManager.Instance.IncrementMovement();
         if (OtherSegment != null)
         {
             Vector3 partnerCenter = OtherSegment.position;

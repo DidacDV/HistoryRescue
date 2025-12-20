@@ -28,6 +28,8 @@ public class BreakingTileSimple : MonoBehaviour
     bool _isBroken = false;
     Vector3 _initialLocalPos;
 
+    public bool IsBroken => _isBroken;
+
     void Awake()
     {
         _col = GetComponent<Collider>();
@@ -49,53 +51,16 @@ public class BreakingTileSimple : MonoBehaviour
             groundLayer = LayerMask.GetMask("Ground");
     }
 
-    void Update()
+    public void TriggerBreak(IStandingChecker checker)
     {
         if (_isBreaking || _isBroken) return;
 
-        Bounds b = _col.bounds;
-        Vector3 overlapHalfExtents = b.extents * 0.9f;
+        bool upright = checker != null && checker.IsStandingUpright();
+        UnityEngine.Debug.Log($"[Tile] TriggerBreak on {gameObject.name}. Upright check: {upright}");
 
-        Collider[] hits = Physics.OverlapBox(
-            b.center,
-            overlapHalfExtents,
-            Quaternion.identity,
-            -1,
-            QueryTriggerInteraction.Collide
-        );
-
-        foreach (var hit in hits)
+        if (upright)
         {
-            if (hit == null) continue;
-            if (hit == _col) continue;
-
-            if (!hit.CompareTag("Player"))
-            {
-                continue;
-            }
-
-            IStandingChecker standingChecker = hit.GetComponentInParent<IStandingChecker>();
-            bool isUpright;
-
-            if (standingChecker != null)
-            {
-                isUpright = standingChecker.IsStandingUpright();
-            }
-            else
-            {
-                float playerHeight = hit.bounds.size.y;
-                isUpright = playerHeight >= uprightHeightThreshold;
-            }
-
-            Vector3 playerPos = hit.transform.position;
-            Vector3 rayStart = new Vector3(playerPos.x, hit.bounds.min.y + 0.01f, playerPos.z);
-            bool grounded = Physics.Raycast(rayStart, Vector3.down, playerGroundCheckDistance, groundLayer);
-
-            if (isUpright && !grounded)
-            {
-                StartCoroutine(BreakSequence());
-                return;
-            }
+            StartCoroutine(BreakSequence());
         }
     }
 
@@ -111,14 +76,10 @@ public class BreakingTileSimple : MonoBehaviour
 
         yield return new WaitForSeconds(breakDelay);
 
-        if (!FinalCheckForPlayer())
-        {
-            _isBreaking = false;
-            yield break;
-        }
-
+        // BREAK IMMEDIATELY
         _isBroken = true;
         _col.enabled = false;
+        UnityEngine.Debug.Log($"[Tile] {gameObject.name} collider disabled. Falling now.");
 
         transform.DOMoveY(transform.position.y - 10f, 1f).SetEase(Ease.InSine).SetDelay(0.05f);
 
@@ -127,46 +88,21 @@ public class BreakingTileSimple : MonoBehaviour
 
     bool FinalCheckForPlayer()
     {
-        Bounds b = _col.bounds;
-        Vector3 overlapHalfExtents = b.extents * 0.9f;
+        // Check a 1x1 area directly above the tile, ignoring the collider's offset center
+        Vector3 checkCenter = transform.position + Vector3.up * 0.5f;
+        Vector3 checkHalfExtents = new Vector3(0.4f, 0.5f, 0.4f);
 
-        Collider[] hits = Physics.OverlapBox(
-            b.center,
-            overlapHalfExtents,
-            Quaternion.identity,
-            -1,
-            QueryTriggerInteraction.Collide
-        );
+        Collider[] hits = Physics.OverlapBox(checkCenter, checkHalfExtents, Quaternion.identity);
 
         foreach (var hit in hits)
         {
-            if (hit == null) continue;
-            if (hit == _col) continue;
-            if (!hit.CompareTag("Player")) continue;
-
-            IStandingChecker standingChecker = hit.GetComponentInParent<IStandingChecker>();
-            bool isUpright;
-
-            if (standingChecker != null)
+            if (hit.CompareTag("Player") && !hit.name.Contains("Ghost"))
             {
-                isUpright = standingChecker.IsStandingUpright();
-            }
-            else
-            {
-                float playerHeight = hit.bounds.size.y;
-                isUpright = playerHeight >= uprightHeightThreshold;
-            }
-
-            Vector3 playerPos = hit.transform.position;
-            Vector3 rayStart = new Vector3(playerPos.x, hit.bounds.min.y + 0.01f, playerPos.z);
-            bool grounded = Physics.Raycast(rayStart, Vector3.down, playerGroundCheckDistance, groundLayer);
-
-            if (isUpright && !grounded)
-            {
+                UnityEngine.Debug.Log($"[Tile] Final Check: Player confirmed on {gameObject.name}");
                 return true;
             }
         }
-
+        UnityEngine.Debug.LogWarning($"[Tile] Final Check: Player NOT found on {gameObject.name} at {checkCenter}");
         return false;
     }
 
