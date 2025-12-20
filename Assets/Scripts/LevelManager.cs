@@ -64,4 +64,13 @@ public class LevelManager : MonoBehaviour {
         else
             Debug.LogError("levelPassAnimations not set for level maanger");
     }
+
+    public void RegisterSegment(PlayerSegmentController segment)
+    {
+        if (segment != null)
+        {
+            segment.OnFellOff.AddListener(OnPlayerFailed);
+            UnityEngine.Debug.Log($"[LevelManager] Registered {segment.name} for failure events.");
+        }
+    }
 }

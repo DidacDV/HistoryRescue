@@ -190,8 +190,8 @@ MonoBehaviour:
   splitGroups:
   - controllingSwitches:
     - {fileID: 572507406}
-    segment1Position: {x: 11.5, y: 0.5, z: 7.5}
-    segment2Position: {x: 8.5, y: 0.5, z: 7.5}
+    tile1: {fileID: 1822473962}
+    tile2: {fileID: 804281688}
     activeSwitchCount: 0
 --- !u!114 &15248794
 MonoBehaviour:
@@ -2321,6 +2321,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 771388886}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &804281688 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 414081297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &934609466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2849,6 +2854,7 @@ MonoBehaviour:
   ghostPlayer: {fileID: 0}
   ghostPivot: {fileID: 0}
   fallTriggerObject: {fileID: 0}
+  landingGraceTime: 0.1
 --- !u!65 &1176157293
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4527,6 +4533,11 @@ MonoBehaviour:
   pivotOffset: {x: 0, y: 0, z: 0.5}
   rotationAxis: {x: 1, y: 0, z: 0}
   rotationAngle: -90
+--- !u!1 &1822473962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 1511320136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1827306651
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -189,8 +189,8 @@ MonoBehaviour:
   splitGroups:
   - controllingSwitches:
     - {fileID: 1370495144}
-    segment1Position: {x: 2.5, y: 0.5, z: 4.5}
-    segment2Position: {x: 12.5, y: 0.5, z: 4.5}
+    tile1: {fileID: 1925237062}
+    tile2: {fileID: 1496528986}
     activeSwitchCount: 0
 --- !u!1 &88547736
 GameObject:
@@ -2079,6 +2079,7 @@ MonoBehaviour:
   ghostPlayer: {fileID: 0}
   ghostPivot: {fileID: 0}
   fallTriggerObject: {fileID: 0}
+  landingGraceTime: 0.1
 --- !u!65 &1176157293
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2789,6 +2790,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 1496528984}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1496528986 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 1496528984}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1556621823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3464,6 +3470,11 @@ PrefabInstance:
 --- !u!4 &1925237061 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 1925237060}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1925237062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 1925237060}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1961311632

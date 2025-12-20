@@ -125,9 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212c260f81f89d848bfef0d205c64538, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  linkedSystem: {fileID: 0}
   pressDepth: 0.15
-  animSpeed: 5
+  animDuration: 0.2
 --- !u!95 &4058136460974074199
 Animator:
   serializedVersion: 7

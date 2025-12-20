@@ -183,14 +183,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbe6d56373fadf48b1c3d791ed42a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SplitManager
-  playerController: {fileID: 0}
+  playerController: {fileID: 1176157292}
   segmentPrefab: {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
   swapAction: {fileID: 3323708303032864980, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   splitGroups:
   - controllingSwitches:
     - {fileID: 1485890909}
-    segment1Position: {x: 10.5, y: 0.5, z: 7.5}
-    segment2Position: {x: 10.5, y: 0.5, z: 1.5}
+    tile1: {fileID: 1507798547}
+    tile2: {fileID: 2122360927}
     activeSwitchCount: 0
 --- !u!1001 &15588301
 PrefabInstance:
@@ -3017,6 +3017,7 @@ MonoBehaviour:
   ghostPlayer: {fileID: 0}
   ghostPivot: {fileID: 0}
   fallTriggerObject: {fileID: 0}
+  landingGraceTime: 0.1
 --- !u!65 &1176157293
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4047,6 +4048,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 1498386470}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1507798547 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 733393154}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1520639718
 PrefabInstance:
@@ -5538,6 +5544,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5396099828374307098, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
   m_PrefabInstance: {fileID: 2080286181}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2122360927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7761140359684795549, guid: f8fd0d93878f1644ba84fc95bbf549c7, type: 3}
+  m_PrefabInstance: {fileID: 15588301}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

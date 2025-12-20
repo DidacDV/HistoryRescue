@@ -36,14 +36,35 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
     public GameObject fallTriggerObject; 
     private Rigidbody playerRigidbody;
     private bool bCommitToFall = false;
-    public bool IsStandingUpright() { return m_Collider.bounds.size.y > 1.5f; }
 
+    public bool IsStandingUpright()
+    {
+        return m_Collider.bounds.size.y > 1.5f;
+    }
+
+    public float landingGraceTime = 0.1f;
+    public bool IsInLandingGrace { get; private set; }
     public bool IsRolling { get { return isRolling; } }
+    public bool IsFalling { get { return bFalling; } }
 
     bool isGrounded()
     {
-        float distToGround = m_Collider.bounds.extents.y;
-        return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f, layerMask);
+        if (IsInLandingGrace) return true;
+
+        Vector3 origin = m_Collider.bounds.center;
+        float rayDistance = m_Collider.bounds.extents.y + 0.2f;
+
+        RaycastHit hit;
+        if (Physics.Raycast(origin, Vector3.down, out hit, rayDistance))
+        {
+            bool isGroundLayer = ((1 << hit.collider.gameObject.layer) & layerMask) != 0;
+            BreakingTileSimple bTile = hit.collider.GetComponentInParent<BreakingTileSimple>();
+            bool isValidBreakingTile = bTile != null && !bTile.IsBroken;
+            bool isButton = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
+
+            return isGroundLayer || isValidBreakingTile || isButton;
+        }
+        return false;
     }
 
     bool IsMoveSafe(Transform ghost)
@@ -86,31 +107,18 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
             RaycastHit hit;
 
-            // NOTE: We temporarily disable the layerMask here to see EVERYTHING beneath the corner.
             if (Physics.Raycast(rayOrigin, Vector3.down, out hit, 1.0f))
             {
-                if (hit.collider.CompareTag("LevelPass"))
-                {
-                    victoryHits++; // Count hits on the victory hole
-                    validHits++;   // Count it as a 'safe' hit for the 4-corner count
-                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.yellow, 2.0f); // Yellow for victory
-                }
-                // Check if we hit the actual ground layer
-                else if (((1 << hit.collider.gameObject.layer) & layerMask) != 0)
+                BreakingTileSimple bTile = hit.collider.GetComponentInParent<BreakingTileSimple>();
+                bool isLevelPass = hit.collider.CompareTag("LevelPass");
+                bool isBreakingTile = bTile != null && !bTile.IsBroken;
+                bool isGroundLayer = ((1 << hit.collider.gameObject.layer) & layerMask) != 0;
+
+                if (isLevelPass || isBreakingTile || isGroundLayer)
                 {
                     validHits++;
-                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.green, 2.0f);
+                    if (isLevelPass) victoryHits++;
                 }
-                else
-                {
-                    // Hit something, but it's not Ground and not LevelPass. This is UNSAFE.
-                    Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.red, 2.0f);
-                }
-            }
-            else
-            {
-                // Ray hit NOTHING! (Empty space) -> UNSAFE
-                Debug.DrawRay(rayOrigin, Vector3.down * 1.0f, Color.red, 2.0f);
             }
         }
 
@@ -137,7 +145,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     void Awake()
     {
-        // Initialize everything in Awake BEFORE OnEnable is called
         moveAction = InputSystem.actions.FindAction("Move");
         layerMask = LayerMask.GetMask("Ground");
         m_Collider = GetComponent<Collider>();
@@ -159,11 +166,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             ghostCol.isTrigger = true;
             ghostObj.SetActive(true);
         }
-
-        if (fallTriggerObject != null)
-        {
-            fallTriggerObject.SetActive(false);
-        }
     }
 
     void Start()
@@ -173,6 +175,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
     void OnEnable()
     {
         if (moveAction != null) moveAction.Enable();
+        StartCoroutine(LandingGrace());
     }
 
     void OnDisable()
@@ -218,9 +221,11 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         }
         else if (!isRolling)
         {
-            if (!isGrounded())
+
+            if (!isGrounded() && !bCommitToFall)
             {
-                UnityEngine.Debug.Log("Player not grounded after reconstitution!");
+                // Only fall if we are actually below the map or truly in the void
+                UnityEngine.Debug.Log("[Physics] Ground lost check.");
                 CheckVictoryHole();
                 if (!bLevelPassed)
                 {
@@ -229,8 +234,9 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                 }
                 return;
             }
-
             Vector2 input = moveAction.ReadValue<Vector2>();
+
+
 
             if (input.sqrMagnitude > 0.5f)
             {
@@ -258,29 +264,53 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         bCommitToFall = true;
         bFalling = true;
 
-        if (fallTriggerObject != null)
-        {
-            float currentHalfHeight = m_Collider.bounds.extents.y;
-
-            Vector3 topCenter = transform.position + (transform.up * currentHalfHeight);
-
-            fallTriggerObject.transform.position = topCenter;
-            fallTriggerObject.transform.parent = this.transform;
-
-            Rigidbody fallTriggerRB = fallTriggerObject.GetComponent<Rigidbody>();
-            if (fallTriggerRB != null)
-            {
-                fallTriggerRB.mass = 500f;
-                fallTriggerRB.isKinematic = false;
-                fallTriggerRB.useGravity = true;
-            }
-            fallTriggerObject.SetActive(true);
-        }
-
         if (playerRigidbody != null)
         {
             playerRigidbody.isKinematic = false;
             playerRigidbody.useGravity = true;
+
+            Vector3 center = m_Collider.bounds.center;
+            BoxCollider b = GetComponent<BoxCollider>();
+            Vector3[] localCorners = GetLocalCorners(b);
+            Vector3 combinedunsupportedOffset = Vector3.zero;
+            int unsupportedCount = 0;
+
+            foreach (Vector3 localCorner in localCorners)
+            {
+                if (localCorner.y > 0) continue;
+                Vector3 worldPoint = transform.TransformPoint(localCorner);
+                RaycastHit hit;
+                bool supported = Physics.Raycast(
+                    worldPoint + Vector3.up * 0.1f,
+                    Vector3.down,
+                    out hit,
+                    0.5f
+                );
+
+                if (supported)
+                {
+                    var bTile = hit.collider.GetComponent<BreakingTileSimple>();
+                    bool validBreakingTile = bTile != null && !bTile.IsBroken;
+
+                    bool isGround = ((1 << hit.collider.gameObject.layer) & layerMask) != 0;
+
+                    supported = isGround || validBreakingTile;
+                }
+
+                if (!supported)
+                {
+                    combinedunsupportedOffset += (worldPoint - center);
+                    unsupportedCount++;
+                }
+            }
+
+            if (unsupportedCount > 0)
+            {
+                combinedunsupportedOffset.y = 0;
+                Vector3 torqueAxis = Vector3.Cross(combinedunsupportedOffset.normalized, Vector3.up);
+                playerRigidbody.AddTorque(torqueAxis * 20f, ForceMode.Impulse);
+                playerRigidbody.AddForce(Vector3.down * 10f, ForceMode.Impulse);
+            }
         }
 
         if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
@@ -426,16 +456,12 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
             transform.RotateAround(pivotPosition, axis, rotationRate);
 
-            // COMMIT POINT: Once we reach 50% of the roll (45 degrees)
-            if (!committed && progress >= 0.8f && !isSafe)
+            if (!committed && progress >= 0.7f && !isSafe)
             {
                 committed = true;
-                Debug.Log("Roll halfway done. Committing movement to physics for landing/fall.");
-
-                // Activate physics control. Whether it lands or falls off is now determined by Unity's physics.
                 StartFallingFromUnsafeRoll();
                 isRolling = false;
-                yield break; // Exit the coroutine
+                yield break;
             }
 
             yield return null;
@@ -459,9 +485,28 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         else if (Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
 
         transform.position = new Vector3(snappedX, currentHeight / 2f, snappedZ);
-
         isRolling = false;
+
         CheckVictoryHole();
+
+        RaycastHit groundHit;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out groundHit, 1.5f))
+        {
+            BreakingTileSimple bTile = groundHit.collider.GetComponentInParent<BreakingTileSimple>();
+            if (bTile != null)
+            {
+                bTile.TriggerBreak(this);
+            }
+        }
+
+        StartCoroutine(LandingGrace());
+    }
+
+    IEnumerator LandingGrace()
+    {
+        IsInLandingGrace = true;
+        yield return new WaitForSeconds(landingGraceTime);
+        IsInLandingGrace = false;
     }
 
     public void CopyTransformData(Transform source, Transform target)
