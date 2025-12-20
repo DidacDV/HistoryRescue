@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: caa7e60703a3a034f822b0b76ce36a11, type: 3}
-  m_Name: CyberTheme
+  m_Name: DefaultTheme
   m_EditorClassIdentifier: Assembly-CSharp::LevelTheme
-  themeName: Cyber Theme
-  themeFont: {fileID: 11400000, guid: ca36c5953cef41d4e9f68b17dfb8e53b, type: 2}
+  themeName: Default Theme
+  stageName: UPC-FIB
+  themeFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  fontSize: 34
+  characterSpacing: 0
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  backgroundImage: {fileID: 0}
+  UIContainerImage: {fileID: 21300000, guid: b9bcc9921fbd23146a7fc3b6fae69bbe, type: 3}
+  UILogoImage: {fileID: 21300000, guid: 04cbcc6d38ce26d46b14a5cf2f7b5b64, type: 3}

@@ -1809,8 +1809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   nextLevelScene: Level3Scene
-  currentTheme: {fileID: 0}
-  backgroundSprite: {fileID: 0}
+  currentTheme: {fileID: 11400000, guid: 8eaafe6908b61c148a4708640382563e, type: 2}
   playerCube: {fileID: 1176157292}
   initAnimation: {fileID: 1391533299}
   failAnimation: {fileID: 277067935}
