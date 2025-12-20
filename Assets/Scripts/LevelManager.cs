@@ -43,11 +43,17 @@ public class LevelManager : MonoBehaviour {
 
     void Start() {
         SetUpPlayerEvents();
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.Play(AudioManager.Instance.levelStart);
+
         PlayInitialAnimation();
         SetUpTheme();
     }
 
     void OnPlayerFailed() {
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.Play(AudioManager.Instance.levelFail);
         if (failAnimation != null)
             failAnimation.LevelFailAnimation(GameManager.Instance.LevelFailed);
         else
@@ -55,6 +61,8 @@ public class LevelManager : MonoBehaviour {
     }
 
     void OnPlayerSucceeded() {
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.Play(AudioManager.Instance.levelPass);
         if (passAnimation != null)
             passAnimation.PassLevelAnimation(() => GameManager.Instance.LevelPassed(nextLevelScene)); //lambda needed 
         else
