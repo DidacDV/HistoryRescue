@@ -1,6 +1,7 @@
 using System;
 using System.Collections; 
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -22,9 +23,8 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     LayerMask layerMask; 			// LayerMask to detect raycast hits with ground tiles only
 
+    public AudioSource playerAudioSource;
     public AudioClip[] sounds; 		// Sounds to play when the cube rotates
-    public AudioClip fallSound; 	// Sound to play when the cube starts falling
-    public AudioClip victorySound;  // Sound to play when level is passed
 
     public UnityEvent OnFellOff;
     public UnityEvent OnReachedVictoryHole;
@@ -172,6 +172,14 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             ghostCol.isTrigger = true;
             ghostObj.SetActive(true);
         }
+        playerAudioSource = GetComponent<AudioSource>();
+        if (playerAudioSource == null)
+        {
+            playerAudioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        playerAudioSource.playOnAwake = false;
+        playerAudioSource.spatialBlend = 0f; //2d
     }
 
     void Start()
@@ -236,7 +244,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                 if (!bLevelPassed)
                 {
                     bFalling = true;
-                    if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
                 }
                 return;
             }
@@ -319,7 +326,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
         }
 
-        if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
     }
 
     // Check if we're over the victory hole and in correct position
@@ -335,7 +341,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                     Debug.Log("CORRECT POSITION! Falling into victory hole");
                     bFalling = true;
                     bLevelPassed = true;
-                    if (victorySound != null) { } // AudioSource.PlayClipAtPoint(victorySound, transform.position, 1.5f);
                 }
             }
         }
@@ -454,6 +459,8 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         isRolling = true;
         bCommitToFall = false;
 
+        PlayRollSound();
+
         while (elapsedTime < rollDuration)
         {
             elapsedTime += Time.deltaTime;
@@ -528,6 +535,21 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         target.position = source.position;
         target.rotation = source.rotation;
         target.localScale = source.localScale;
+    }
+
+    public void SetThemeAudio(AudioClip[] rollSounds)
+    {
+        if (rollSounds != null)
+            sounds = rollSounds;
+    }
+
+    void PlayRollSound()
+    {
+        if (sounds == null || sounds.Length == 0) return;
+
+        AudioClip clip = sounds[UnityEngine.Random.Range(0, sounds.Length)];
+        playerAudioSource.pitch = UnityEngine.Random.Range(0.65f, 0.95f);
+        playerAudioSource.PlayOneShot(clip, 0.6f);
     }
 
 }

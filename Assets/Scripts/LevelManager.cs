@@ -40,6 +40,8 @@ public class LevelManager : MonoBehaviour
         {
             playerCube.OnFellOff.AddListener(OnPlayerFailed);
             playerCube.OnReachedVictoryHole.AddListener(OnPlayerSucceeded);
+            if (playerCube != null && currentTheme.rollSounds != null)
+                playerCube.SetThemeAudio(currentTheme.rollSounds);
         }
         else
             UnityEngine.Debug.LogError("player not set in level manager");
@@ -98,6 +100,7 @@ public class LevelManager : MonoBehaviour
 
     void OnPlayerFailed()
     {
+
         if (musicController != null)
             musicController.StopMusic();
         if (AudioManager.Instance != null)
