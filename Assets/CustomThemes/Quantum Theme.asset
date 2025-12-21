@@ -20,3 +20,8 @@ MonoBehaviour:
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   UIContainerImage: {fileID: 21300000, guid: f0671968f61e27a40879a0e520e9459b, type: 3}
   UILogoImage: {fileID: 21300000, guid: cf36fa5e5658dd5479317a3fd2987443, type: 3}
+  rollSounds:
+  - {fileID: 8300000, guid: 8edc55a80a78f104e90f69260792e17e, type: 3}
+  - {fileID: 8300000, guid: 2a5c385459dd4504eab6d7c61ca7fdf6, type: 3}
+  - {fileID: 8300000, guid: 4eb8d416c61f9bf48a91ef6f15b90fa9, type: 3}
+  - {fileID: 8300000, guid: 6b914eed4f0cf594393a661602b2af7f, type: 3}

@@ -12,4 +12,5 @@ public class LevelTheme : ScriptableObject
     public Color backgroundColor;
     public Sprite UIContainerImage;
     public Sprite UILogoImage;
+    public AudioClip[] rollSounds;
 }
