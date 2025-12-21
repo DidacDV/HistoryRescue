@@ -62,6 +62,12 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             bool isValidBreakingTile = bTile != null && !bTile.IsBroken;
             bool isButton = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
 
+            bool isVictoryHole = hit.collider.CompareTag("LevelPass");
+            if (isVictoryHole && !IsStandingUpright())
+            {
+                return true;  //can walk on victory hole, just can't fall in
+            }
+
             return isGroundLayer || isValidBreakingTile || isButton;
         }
         return false;
@@ -467,24 +473,32 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             yield return null;
         }
 
-        // 3. Post-Roll Snapping: Use the pre-calculated final state for perfect snap
-
         // Snap rotation
         transform.rotation = finalRotation;
+        Physics.SyncTransforms();
+
+        // Use the collider's actual size after rotation for accurate height
+        float halfHeight = m_Collider.bounds.extents.y;
 
         // Snap position (using the pre-calculated finalPos)
         float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
         float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
 
-        // Recalculate current height based on final rotation to handle rotation changes
-        float currentHeight = 1.0f;
-        Vector3 size = transform.lossyScale;
+        // Find the tile surface below
+        float surfaceY = 0f;
+        RaycastHit hit;
+        Vector3 checkPos = new Vector3(snappedX, 2f, snappedZ); // Start from above
 
-        if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.9f) currentHeight = size.x;
-        else if (Mathf.Abs(Vector3.Dot(transform.up, Vector3.up)) > 0.9f) currentHeight = size.y;
-        else if (Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
+        if (Physics.Raycast(checkPos, Vector3.down, out hit, 10f, layerMask))
+        {
+            // Get the TOP of the tile collider
+            surfaceY = hit.collider.bounds.max.y;
+        }
 
-        transform.position = new Vector3(snappedX, currentHeight / 2f, snappedZ);
+        // Place cube so its bottom sits on the surface
+        transform.position = new Vector3(snappedX, surfaceY + halfHeight, snappedZ);
+        Physics.SyncTransforms();
+
         isRolling = false;
 
         CheckVictoryHole();
