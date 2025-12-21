@@ -5,6 +5,7 @@ using System.Diagnostics;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -86,10 +87,26 @@ public class LevelManager : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.Play(AudioManager.Instance.levelStart);
 
+        // Inside LevelManager.cs Start()
         if (introVoiceClip != null)
         {
-            AudioManager.Instance.Play(introVoiceClip);
-            UIManager.Instance.ShowAutoSubtitles(introFullText, introVoiceClip.length);
+            string sceneName = SceneManager.GetActiveScene().name;
+
+            // Check if we already played this in this session
+            if (!GameManager.Instance.HasSeenSubtitle(sceneName))
+            {
+                UnityEngine.Debug.Log($"<color=orange>[LevelManager]</color> First time in {sceneName}. Playing subtitles.");
+
+                AudioManager.Instance.Play(introVoiceClip);
+                UIManager.Instance.ShowAutoSubtitles(introFullText, introVoiceClip.length);
+
+                // Mark it NOW so it doesn't play on the next Start() call
+                GameManager.Instance.MarkSubtitleAsSeen(sceneName);
+            }
+            else
+            {
+                UnityEngine.Debug.Log($"<color=green>[LevelManager]</color> {sceneName} already seen. Skipping subtitles.");
+            }
         }
 
         PlayInitialAnimation();
