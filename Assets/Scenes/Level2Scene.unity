@@ -444,7 +444,7 @@ Transform:
   m_GameObject: {fileID: 142951324}
   serializedVersion: 2
   m_LocalRotation: {x: 0.35503626, y: 0.14734381, z: -0.09234527, w: 0.91853774}
-  m_LocalPosition: {x: 5.2004757, y: 3.7650204, z: 0.08625355}
+  m_LocalPosition: {x: -5.3, y: 38.8, z: -36.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2474,6 +2474,8 @@ MonoBehaviour:
   initAnimation: {fileID: 1391533299}
   failAnimation: {fileID: 277067935}
   passAnimation: {fileID: 1751774193}
+  introVoiceClip: {fileID: 0}
+  introFullText: 
 --- !u!4 &1086741115
 Transform:
   m_ObjectHideFlags: 0
