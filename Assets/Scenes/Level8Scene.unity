@@ -156,8 +156,9 @@ MonoBehaviour:
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
   passAnimation: {fileID: 177701721}
-  introVoiceClip: {fileID: 0}
-  introFullText: 
+  introVoiceClip: {fileID: 8300000, guid: 9b9741eb59527004b979e314a79d65bd, type: 3}
+  introFullText: We're almost there! We have arrived to the... future? It seems my
+    calibrations were a bit off. We must get out of here anyway...
 --- !u!4 &15248792
 Transform:
   m_ObjectHideFlags: 0
@@ -187,6 +188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SplitManager
   playerController: {fileID: 1176157292}
   segmentPrefab: {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
+  shieldVfxPrefab: {fileID: 7314526620251459061, guid: ccf28ea29cf499744ac31bab90073aba, type: 3}
+  shieldDuration: 1
   swapAction: {fileID: 3323708303032864980, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   splitGroups:
   - controllingSwitches:
@@ -194,6 +197,11 @@ MonoBehaviour:
     tile1: {fileID: 1507798547}
     tile2: {fileID: 2122360927}
     activeSwitchCount: 0
+  showSubtitleOnFirstSplit: 1
+  splitVoiceClip: {fileID: 8300000, guid: e49e2633f9bc8824d8d58c8e946b6878, type: 3}
+  splitSubtitleText: You have used the new molecular split technology. Press the
+    space bar to change between segments. Put them side by side to reconstitute your
+    original form.
 --- !u!1001 &15588301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3060,13 +3068,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveCube
   rotSpeed: 240
   fallSpeed: 7
+  playerAudioSource: {fileID: 0}
   sounds:
   - {fileID: 8300000, guid: 136a39088874395408d09223710c4f72, type: 3}
   - {fileID: 8300000, guid: c923576bf7726b74583bd6175683b7af, type: 3}
   - {fileID: 8300000, guid: 6588f78fcb7456f4ab7840b863429068, type: 3}
   - {fileID: 8300000, guid: 6ac4dc07db529eb4fb121643c48573ea, type: 3}
-  fallSound: {fileID: 8300000, guid: 6bdc6de39c0314b4eb1b1ab0e21ad992, type: 3}
-  victorySound: {fileID: 0}
   OnFellOff:
     m_PersistentCalls:
       m_Calls: []
@@ -3456,15 +3463,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.5000904
+      value: 2.5000904
       objectReference: {fileID: 0}
     - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 0.08995073
       objectReference: {fileID: 0}
     - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.4999096
+      value: 1.4999398
       objectReference: {fileID: 0}
     - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
       propertyPath: m_LocalRotation.w

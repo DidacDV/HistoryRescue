@@ -155,8 +155,9 @@ MonoBehaviour:
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
   passAnimation: {fileID: 177701721}
-  introVoiceClip: {fileID: 0}
-  introFullText: 
+  introVoiceClip: {fileID: 8300000, guid: 78ad8e63366dd1147bb147d87566159b, type: 3}
+  introFullText: This seems to be our last step to escape the ancient ages... Beware
+    of the fragile tiles, they don't seem very stable!
 --- !u!4 &15248792
 Transform:
   m_ObjectHideFlags: 0
@@ -4173,13 +4174,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveCube
   rotSpeed: 240
   fallSpeed: 7
+  playerAudioSource: {fileID: 0}
   sounds:
   - {fileID: 8300000, guid: 136a39088874395408d09223710c4f72, type: 3}
   - {fileID: 8300000, guid: c923576bf7726b74583bd6175683b7af, type: 3}
   - {fileID: 8300000, guid: 6588f78fcb7456f4ab7840b863429068, type: 3}
   - {fileID: 8300000, guid: 6ac4dc07db529eb4fb121643c48573ea, type: 3}
-  fallSound: {fileID: 8300000, guid: 6bdc6de39c0314b4eb1b1ab0e21ad992, type: 3}
-  victorySound: {fileID: 0}
   OnFellOff:
     m_PersistentCalls:
       m_Calls: []
