@@ -467,24 +467,19 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             yield return null;
         }
 
-        // 3. Post-Roll Snapping: Use the pre-calculated final state for perfect snap
-
         // Snap rotation
         transform.rotation = finalRotation;
+        Physics.SyncTransforms();
 
-        // Snap position (using the pre-calculated finalPos)
-        float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
-        float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
+        // Use the collider's actual size after rotation
+        float halfHeight = m_Collider.bounds.extents.y;
 
-        // Recalculate current height based on final rotation to handle rotation changes
-        float currentHeight = 1.0f;
-        Vector3 size = transform.lossyScale;
+        float snappedX = Mathf.Round(finalPos.x * 2f) / 2f;
+        float snappedZ = Mathf.Round(finalPos.z * 2f) / 2f;
 
-        if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.9f) currentHeight = size.x;
-        else if (Mathf.Abs(Vector3.Dot(transform.up, Vector3.up)) > 0.9f) currentHeight = size.y;
-        else if (Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
+        transform.position = new Vector3(snappedX, halfHeight, snappedZ);
+        Physics.SyncTransforms();
 
-        transform.position = new Vector3(snappedX, currentHeight / 2f, snappedZ);
         isRolling = false;
 
         CheckVictoryHole();
