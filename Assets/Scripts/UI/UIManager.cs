@@ -1,13 +1,19 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+
+    [Header("Subtitle Settings")]
+    [SerializeField] private TextMeshProUGUI subtitleText;
+    [SerializeField] private GameObject subtitlePanel;
+
     [SerializeField] private TextMeshProUGUI movementCountValueText;
     [SerializeField] private TextMeshProUGUI movementCountLabel;
 
@@ -25,6 +31,52 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image UIPanelLogo;
 
     [SerializeField] private GameObject PauseUI;
+
+    private Coroutine subtitleCoroutine;
+
+    public void ShowAutoSubtitles(string fullText, float duration)
+    {
+        if (subtitleCoroutine != null) StopCoroutine(subtitleCoroutine);
+        subtitleCoroutine = StartCoroutine(AnimateSubtitles(fullText, duration));
+    }
+
+    private IEnumerator AnimateSubtitles(string text, float totalDuration)
+    {
+        subtitlePanel.SetActive(true);
+        float timePerChar = totalDuration / text.Length;
+        string[] words = text.Split(' ');
+        List<string> fragments = new List<string>();
+        string currentLine = "";
+
+        foreach (string word in words)
+        {
+            string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
+            subtitleText.text = testLine;
+            subtitleText.ForceMeshUpdate();
+
+            if (subtitleText.preferredWidth > subtitleText.rectTransform.rect.width)
+            {
+                fragments.Add(currentLine);
+                currentLine = word;
+            }
+            else currentLine = testLine;
+        }
+        fragments.Add(currentLine);
+
+        foreach (string fragment in fragments)
+        {
+            subtitleText.text = "";
+            foreach (char c in fragment)
+            {
+                subtitleText.text += c;
+                yield return new WaitForSeconds(timePerChar);
+            }
+        }
+
+        subtitleText.text = "";
+        yield return new WaitForSeconds(1f);
+        subtitlePanel.SetActive(false);
+    }
 
     void Awake()
     {
