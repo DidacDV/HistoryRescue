@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public string nextLevelScene; //name of next level scene
-    public LevelTheme currentTheme; //NULL if the current level keeps the same font, otherwise the new font to be set in the UI
+    public string nextLevelScene;
+    public LevelTheme currentTheme; 
 
     public AudioClip backgroundMusic;
     public PlayerController playerCube;
@@ -78,36 +78,22 @@ public class LevelManager : MonoBehaviour
             {
                 source.clip = backgroundMusic;
                 source.loop = true;
-                // DEBUG: Check if clip assigned
-                UnityEngine.Debug.Log($"[Music] Clip assigned: {source.clip.name}");
             }
             musicController.PlayMusic();
-            // DEBUG: Check if playing
-            UnityEngine.Debug.Log($"[Music] IsPlaying: {source.isPlaying}");
         }
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.Play(AudioManager.Instance.levelStart);
 
-        // Inside LevelManager.cs Start()
         if (introVoiceClip != null)
         {
             string sceneName = SceneManager.GetActiveScene().name;
 
-            // Check if we already played this in this session
             if (!GameManager.Instance.HasSeenSubtitle(sceneName))
             {
-                UnityEngine.Debug.Log($"<color=orange>[LevelManager]</color> First time in {sceneName}. Playing subtitles.");
-
-                AudioManager.Instance.Play(introVoiceClip);
+                AudioManager.Instance.PlayVoice(introVoiceClip);
                 UIManager.Instance.ShowAutoSubtitles(introFullText, introVoiceClip.length);
-
-                // Mark it NOW so it doesn't play on the next Start() call
                 GameManager.Instance.MarkSubtitleAsSeen(sceneName);
-            }
-            else
-            {
-                UnityEngine.Debug.Log($"<color=green>[LevelManager]</color> {sceneName} already seen. Skipping subtitles.");
             }
         }
 

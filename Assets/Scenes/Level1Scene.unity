@@ -155,9 +155,9 @@ MonoBehaviour:
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
   passAnimation: {fileID: 177701721}
-  introVoiceClip: {fileID: 8300000, guid: 53024ab02c14618458f88a6f0251b6e4, type: 3}
-  introFullText: Be welcome, traveller. A loophole has trapped you inside this time
-    vortexes. To escape, you must fit the object vertically through the portal.
+  introVoiceClip: {fileID: 8300000, guid: 750edbd910a73bf4e922ab52b23b990f, type: 3}
+  introFullText: Hello, traveller. You have been trapped in a time vortex. To escape,
+    fit the cube vertically through the portal using the arrow keys.
 --- !u!4 &15248792
 Transform:
   m_ObjectHideFlags: 0
@@ -1992,13 +1992,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveCube
   rotSpeed: 240
   fallSpeed: 7
+  playerAudioSource: {fileID: 0}
   sounds:
   - {fileID: 8300000, guid: 136a39088874395408d09223710c4f72, type: 3}
   - {fileID: 8300000, guid: c923576bf7726b74583bd6175683b7af, type: 3}
   - {fileID: 8300000, guid: 6588f78fcb7456f4ab7840b863429068, type: 3}
   - {fileID: 8300000, guid: 6ac4dc07db529eb4fb121643c48573ea, type: 3}
-  fallSound: {fileID: 8300000, guid: 6bdc6de39c0314b4eb1b1ab0e21ad992, type: 3}
-  victorySound: {fileID: 0}
   OnFellOff:
     m_PersistentCalls:
       m_Calls: []

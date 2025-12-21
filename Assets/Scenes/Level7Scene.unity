@@ -222,8 +222,9 @@ MonoBehaviour:
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
   passAnimation: {fileID: 177701721}
-  introVoiceClip: {fileID: 0}
-  introFullText: 
+  introVoiceClip: {fileID: 8300000, guid: 75d973fcbf0bf27498d7c48e817438cc, type: 3}
+  introFullText: One step more and we are out of the industrial revolution! Use your
+    movements wisely...
 --- !u!4 &15248792
 Transform:
   m_ObjectHideFlags: 0

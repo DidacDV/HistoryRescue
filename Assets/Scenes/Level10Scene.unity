@@ -157,8 +157,9 @@ MonoBehaviour:
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
   passAnimation: {fileID: 177701721}
-  introVoiceClip: {fileID: 0}
-  introFullText: 
+  introVoiceClip: {fileID: 8300000, guid: 2bba3f6717b3d4849b7d7e4df03c638e, type: 3}
+  introFullText: This is our final challenge. all of what we have learned must be
+    put into practice here! You must not miss now, traveller.
 --- !u!4 &15248792
 Transform:
   m_ObjectHideFlags: 0
@@ -188,6 +189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SplitManager
   playerController: {fileID: 1176157292}
   segmentPrefab: {fileID: 1279227097398695010, guid: c854f3254188a464e811cf0662b583c5, type: 3}
+  shieldVfxPrefab: {fileID: 7314526620251459061, guid: ccf28ea29cf499744ac31bab90073aba, type: 3}
+  shieldDuration: 1
   swapAction: {fileID: 3323708303032864980, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   splitGroups:
   - controllingSwitches:
@@ -195,6 +198,9 @@ MonoBehaviour:
     tile1: {fileID: 1822473962}
     tile2: {fileID: 804281688}
     activeSwitchCount: 0
+  showSubtitleOnFirstSplit: 0
+  splitVoiceClip: {fileID: 0}
+  splitSubtitleText: 
 --- !u!114 &15248794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2897,13 +2903,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveCube
   rotSpeed: 240
   fallSpeed: 7
+  playerAudioSource: {fileID: 0}
   sounds:
   - {fileID: 8300000, guid: 136a39088874395408d09223710c4f72, type: 3}
   - {fileID: 8300000, guid: c923576bf7726b74583bd6175683b7af, type: 3}
   - {fileID: 8300000, guid: 6588f78fcb7456f4ab7840b863429068, type: 3}
   - {fileID: 8300000, guid: 6ac4dc07db529eb4fb121643c48573ea, type: 3}
-  fallSound: {fileID: 8300000, guid: 6bdc6de39c0314b4eb1b1ab0e21ad992, type: 3}
-  victorySound: {fileID: 0}
   OnFellOff:
     m_PersistentCalls:
       m_Calls: []
