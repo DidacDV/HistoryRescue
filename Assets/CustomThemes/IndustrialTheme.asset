@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: IndustrialTheme
   m_EditorClassIdentifier: Assembly-CSharp::LevelTheme
   themeName: Modern Theme
+  stageName: INDUSTRIAL
   themeFont: {fileID: 11400000, guid: 6a2d6b3f517e5a6478f7b64e404474bb, type: 2}
+  fontSize: 32
+  characterSpacing: 0
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  backgroundImage: {fileID: 0}
   UIContainerImage: {fileID: 21300000, guid: ff8829cbe09c7714a9fb79ef5270d3a2, type: 3}
+  UILogoImage: {fileID: 21300000, guid: bed350a296846464dbd2ad5079ab713d, type: 3}

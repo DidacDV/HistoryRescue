@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: AncientTheme
   m_EditorClassIdentifier: Assembly-CSharp::LevelTheme
   themeName: AncientTheme
+  stageName: ANCIENT TIMES
   themeFont: {fileID: 11400000, guid: c2e082dfa66246f498a85670782e5cc0, type: 2}
+  fontSize: 42
+  characterSpacing: 0
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  backgroundImage: {fileID: 0}
   UIContainerImage: {fileID: 21300000, guid: bc06359feb82e024b8f1c45cda36b80c, type: 3}
+  UILogoImage: {fileID: 21300000, guid: 83ecdc02125b1b542aeedee7d9e30f36, type: 3}

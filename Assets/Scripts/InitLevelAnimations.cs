@@ -44,7 +44,8 @@ public class InitLevelAnimations : MonoBehaviour {
     void AnimateTilesRising() {
         foreach (GameObject tile in allTiles) {
             if (tile == null) continue;
-
+            Animator anim = tile.GetComponent<Animator>();
+            if (anim != null) anim.enabled = false;
             //store target position (current position)
             Vector3 targetPos = tile.transform.position;
 
