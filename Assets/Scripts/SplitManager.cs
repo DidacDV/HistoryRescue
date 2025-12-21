@@ -16,6 +16,8 @@ public class SplitManager : MonoBehaviour, ISwitchListener
 {
     public PlayerController playerController;
     public GameObject segmentPrefab;
+    public GameObject shieldVfxPrefab;
+    public float shieldDuration = 1.0f;
     public InputActionReference swapAction;
     [SerializeField] private List<SplitGroup> splitGroups = new List<SplitGroup>();
 
@@ -94,11 +96,12 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         segment2Controller.SetControl(false);
         currentControlledSegment = segment1;
 
+        TriggerShieldVFX(currentControlledSegment);
         playerController.gameObject.SetActive(false);
         isSplit = true;
     }
 
-    void Update(){ if (isSplit) CheckForReconstitution();}
+    void Update() { if (isSplit) CheckForReconstitution(); }
 
     private void OnSwapPerformed(InputAction.CallbackContext context) { if (isSplit) SwapControl(); }
 
@@ -108,6 +111,7 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         segment1Controller.SetControl(!isSeg1);
         segment2Controller.SetControl(isSeg1);
         currentControlledSegment = isSeg1 ? segment2 : segment1;
+        TriggerShieldVFX(currentControlledSegment);
     }
 
     void CheckForReconstitution()
@@ -132,5 +136,14 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         playerController.ResetState();
         InputSystem.actions.FindActionMap("Player")?.Enable();
         isSplit = false;
+    }
+
+    private void TriggerShieldVFX(GameObject target)
+    {
+        if (shieldVfxPrefab == null || target == null) return;
+
+        GameObject vfx = Instantiate(shieldVfxPrefab, target.transform.position, Quaternion.identity, target.transform);
+        vfx.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        Destroy(vfx, shieldDuration);
     }
 }

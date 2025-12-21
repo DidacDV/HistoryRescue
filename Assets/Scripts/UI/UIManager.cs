@@ -13,6 +13,10 @@ public class UIManager : MonoBehaviour
     [Header("Subtitle Settings")]
     [SerializeField] private TextMeshProUGUI subtitleText;
     [SerializeField] private GameObject subtitlePanel;
+    [SerializeField] private float floatAmplitude = 10f; 
+    [SerializeField] private float floatSpeed = 2f;    
+    private RectTransform subtitleRectTransform;
+    private Vector2 originalSubtitlePosition;
 
     [SerializeField] private TextMeshProUGUI movementCountValueText;
     [SerializeField] private TextMeshProUGUI movementCountLabel;
@@ -33,16 +37,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject PauseUI;
 
     private Coroutine subtitleCoroutine;
+    private Coroutine floatCoroutine;
 
     public void ShowAutoSubtitles(string fullText, float duration)
     {
         if (subtitleCoroutine != null) StopCoroutine(subtitleCoroutine);
+        if (floatCoroutine != null) StopCoroutine(floatCoroutine);
+
         subtitleCoroutine = StartCoroutine(AnimateSubtitles(fullText, duration));
+        floatCoroutine = StartCoroutine(IdleFloatAnimation()); 
     }
 
     private IEnumerator AnimateSubtitles(string text, float totalDuration)
     {
+        CanvasGroup canvasGroup = subtitlePanel.GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = subtitlePanel.AddComponent<CanvasGroup>();
+
+        canvasGroup.alpha = 1f;
+        subtitleRectTransform.anchoredPosition = originalSubtitlePosition;
         subtitlePanel.SetActive(true);
+
         float timePerChar = totalDuration / text.Length;
         string[] words = text.Split(' ');
         List<string> fragments = new List<string>();
@@ -73,9 +87,42 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        subtitleText.text = "";
         yield return new WaitForSeconds(1f);
+
+        // 2. Fade Downwards Animation
+        if (floatCoroutine != null) StopCoroutine(floatCoroutine); 
+
+        float fadeDuration = 0.5f;
+        float timer = 0f;
+        Vector2 startPos = subtitleRectTransform.anchoredPosition;
+        Vector2 endPos = startPos + new Vector2(0, -40f); 
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / fadeDuration;
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
+            subtitleRectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
+
+            yield return null;
+        }
+
+        subtitleText.text = "";
         subtitlePanel.SetActive(false);
+        canvasGroup.alpha = 1f;
+        subtitleRectTransform.anchoredPosition = originalSubtitlePosition;
+    }
+
+    private IEnumerator IdleFloatAnimation()
+    {
+        float timer = 0f;
+        while (true)
+        {
+            timer += Time.deltaTime * floatSpeed;
+            float newY = originalSubtitlePosition.y + (Mathf.Sin(timer) * floatAmplitude);
+            subtitleRectTransform.anchoredPosition = new Vector2(originalSubtitlePosition.x, newY);
+            yield return null;
+        }
     }
 
     void Awake()
@@ -91,6 +138,12 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        if (subtitlePanel != null)
+        {
+            subtitleRectTransform = subtitlePanel.GetComponent<RectTransform>();
+            originalSubtitlePosition = subtitleRectTransform.anchoredPosition;
+        }
+
 
         UpdateMovementText();
 

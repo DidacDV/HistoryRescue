@@ -1,8 +1,10 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Collections;
-using UnityEngine.InputSystem;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
     public int currentLevel = 1;
     public int totalScore = 0;
     public string currentLevelName = "";
+    private List<string> seenLevels = new List<string>();
 
     void Awake()
     {
@@ -55,7 +58,7 @@ public class GameManager : MonoBehaviour
         if (scene.name.StartsWith("Level"))
         {
             currentLevelName = scene.name;
-            Debug.Log($"current level:{currentLevelName}");
+            UnityEngine.Debug.Log($"current level:{currentLevelName}");
         }
 
         if (scene.name == "MainMenu" || scene.name == "VictoryScreen")
@@ -65,7 +68,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log(scene.name);
+            UnityEngine.Debug.Log(scene.name);
             if (scene.name == "Persistent" || scene.name == "VictoryScreen") return;
             if (UIManager.Instance != null)
                 UIManager.Instance.EnableUI();
@@ -79,6 +82,7 @@ public class GameManager : MonoBehaviour
             if (UIManager.Instance != null)
                 UIManager.Instance.DisableUI();
         }
+        ClearSubtitleHistory();
         currentLevel = 1;
         totalScore = 0;
         UIManager.Instance.InitUIVars();
@@ -87,20 +91,20 @@ public class GameManager : MonoBehaviour
 
     public void LevelPassed(string nextLevelName)
     {
-        Debug.Log($"Level {currentLevel} passed");
+        UnityEngine.Debug.Log($"Level {currentLevel} passed");
         currentLevel++;
         StartCoroutine(LoadNextLevelCoroutine(nextLevelName));
     }
 
     public void LevelFailed()
     {
-        Debug.Log("Level failed Restarting...");
+        UnityEngine.Debug.Log("Level failed Restarting...");
         StartCoroutine(RestartLevelCoroutine());
     }
 
     public void GameCompleted()
     {
-        Debug.Log("game has been completed");
+        UnityEngine.Debug.Log("game has been completed");
         //StartCoroutine(ReturnToMenuCoroutine()); implement function to go back 
     }
 
@@ -123,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        Debug.Log("Returning to Main Menu...");
+        UnityEngine.Debug.Log("Returning to Main Menu...");
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -133,12 +137,31 @@ public class GameManager : MonoBehaviour
 
         string sceneName = "Level" + currentLevel + "Scene";
 
-        Debug.Log($"Debug loading: {sceneName}");
+        UnityEngine.Debug.Log($"Debug loading: {sceneName}");
         LoadLevel(sceneName);
     }
 
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    public bool HasSeenSubtitle(string sceneName)
+    {
+        return seenLevels.Contains(sceneName);
+    }
+
+    public void MarkSubtitleAsSeen(string sceneName)
+    {
+        if (!seenLevels.Contains(sceneName))
+        {
+            seenLevels.Add(sceneName);
+            UnityEngine.Debug.Log($"<color=cyan>[GameManager]</color> Marked {sceneName} as seen. Total seen: {seenLevels.Count}");
+        }
+    }
+
+    public void ClearSubtitleHistory()
+    {
+        seenLevels.Clear();
     }
 }
