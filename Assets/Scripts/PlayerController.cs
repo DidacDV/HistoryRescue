@@ -62,6 +62,12 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             bool isValidBreakingTile = bTile != null && !bTile.IsBroken;
             bool isButton = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
 
+            bool isVictoryHole = hit.collider.CompareTag("LevelPass");
+            if (isVictoryHole && !IsStandingUpright())
+            {
+                return true;  //can walk on victory hole, just can't fall in
+            }
+
             return isGroundLayer || isValidBreakingTile || isButton;
         }
         return false;
@@ -471,13 +477,26 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         transform.rotation = finalRotation;
         Physics.SyncTransforms();
 
-        // Use the collider's actual size after rotation
+        // Use the collider's actual size after rotation for accurate height
         float halfHeight = m_Collider.bounds.extents.y;
 
-        float snappedX = Mathf.Round(finalPos.x * 2f) / 2f;
-        float snappedZ = Mathf.Round(finalPos.z * 2f) / 2f;
+        // Snap position (using the pre-calculated finalPos)
+        float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
+        float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
 
-        transform.position = new Vector3(snappedX, halfHeight, snappedZ);
+        // Find the tile surface below
+        float surfaceY = 0f;
+        RaycastHit hit;
+        Vector3 checkPos = new Vector3(snappedX, 2f, snappedZ); // Start from above
+
+        if (Physics.Raycast(checkPos, Vector3.down, out hit, 10f, layerMask))
+        {
+            // Get the TOP of the tile collider
+            surfaceY = hit.collider.bounds.max.y;
+        }
+
+        // Place cube so its bottom sits on the surface
+        transform.position = new Vector3(snappedX, surfaceY + halfHeight, snappedZ);
         Physics.SyncTransforms();
 
         isRolling = false;
