@@ -2820,7 +2820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   nextLevelScene: Level3Scene
   currentTheme: {fileID: 11400000, guid: 8eaafe6908b61c148a4708640382563e, type: 2}
-  backgroundMusic: {fileID: 0}
+  backgroundMusic: {fileID: 8300000, guid: a5e20d3753413e84cb45e7213b92c845, type: 3}
   playerCube: {fileID: 612081461}
   initAnimation: {fileID: 1391533299}
   failAnimation: {fileID: 277067935}
@@ -2889,6 +2889,7 @@ MonoBehaviour:
   showSubtitleOnFirstSplit: 0
   splitVoiceClip: {fileID: 0}
   splitSubtitleText: 
+  swapSound: {fileID: 0}
 --- !u!1001 &1108316034
 PrefabInstance:
   m_ObjectHideFlags: 0
