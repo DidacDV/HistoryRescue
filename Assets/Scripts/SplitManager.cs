@@ -26,7 +26,7 @@ public class SplitManager : MonoBehaviour, ISwitchListener
     public AudioClip splitVoiceClip;
     [TextArea(3, 10)]
     public string splitSubtitleText;
-
+    [SerializeField] private AudioClip swapSound;
 
     private Dictionary<ISwitchSource, SplitGroup> sourceToGroupMap = new Dictionary<ISwitchSource, SplitGroup>();
     private bool isSplit = false;
@@ -123,6 +123,10 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         segment1Controller.SetControl(!isSeg1);
         segment2Controller.SetControl(isSeg1);
         currentControlledSegment = isSeg1 ? segment2 : segment1;
+        if (swapSound != null)
+        {
+            AudioManager.Instance.Play(swapSound);
+        }
         TriggerShieldVFX(currentControlledSegment);
     }
 

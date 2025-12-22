@@ -7,6 +7,9 @@ public class PressurePlate : BaseSwitch
     [SerializeField] private float pressDepth = 0.15f;
     [SerializeField] private float animDuration = 0.2f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip pressSound;
+
     private Vector3 upPos;
     private Vector3 downPos;
     private int objectsOnPlate = 0;
@@ -29,6 +32,10 @@ public class PressurePlate : BaseSwitch
                 {
                     wasPressed = true;
                     AnimateDown();
+                    if (pressSound != null)
+                    {
+                        AudioManager.Instance.Play(pressSound);
+                    }
                 }
                 Toggle();
             }

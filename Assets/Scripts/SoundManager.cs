@@ -31,6 +31,7 @@ public class AudioManager : MonoBehaviour
             {
                 audioSource = GetComponent<AudioSource>();
                 voiceSource = gameObject.AddComponent<AudioSource>();
+                voiceSource.volume = 0.6f;
             }
         }
         else
