@@ -519,7 +519,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
         AudioClip clip = sounds[UnityEngine.Random.Range(0, sounds.Length)];
         playerAudioSource.pitch = UnityEngine.Random.Range(0.65f, 0.95f);
-        playerAudioSource.PlayOneShot(clip, 0.6f);
+        playerAudioSource.PlayOneShot(clip, 0.35f);
     }
 
 }

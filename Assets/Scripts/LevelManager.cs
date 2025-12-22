@@ -83,7 +83,7 @@ public class LevelManager : MonoBehaviour
         }
 
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelStart);
+            AudioManager.Instance.Play(AudioManager.Instance.levelStart, 0.35f);
 
         if (introVoiceClip != null)
         {
@@ -107,7 +107,7 @@ public class LevelManager : MonoBehaviour
         if (musicController != null)
             musicController.StopMusic();
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelFail);
+            AudioManager.Instance.Play(AudioManager.Instance.levelFail, 0.35f);
         if (failAnimation != null)
             failAnimation.LevelFailAnimation(GameManager.Instance.LevelFailed);
         else
@@ -119,7 +119,7 @@ public class LevelManager : MonoBehaviour
         if (musicController != null)
             musicController.StopMusic();
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelPass);
+            AudioManager.Instance.Play(AudioManager.Instance.levelPass, 0.35f);
         if (passAnimation != null)
             passAnimation.PassLevelAnimation(() => GameManager.Instance.LevelPassed(nextLevelScene)); //lambda needed 
         else

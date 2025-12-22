@@ -40,10 +40,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(AudioClip clip)
+    public void Play(AudioClip clip, float volumeScale = 0f)
     {
         if (clip != null)
-            audioSource.PlayOneShot(clip);
+            if (volumeScale != 0f)
+                audioSource.PlayOneShot(clip, volumeScale);
+            else audioSource.PlayOneShot(clip);
     }
 
     public void PlayVoice(AudioClip clip)
