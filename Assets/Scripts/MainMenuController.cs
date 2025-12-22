@@ -5,6 +5,12 @@ public class MenuController : MonoBehaviour
 {
     public AudioClip music;
 
+    private void Awake()
+    {
+        if (!SceneManager.GetSceneByName("Persistent").isLoaded)
+            SceneManager.LoadScene("Persistent", LoadSceneMode.Additive);
+    }
+
     void Start()
     {
         if (music != null && AudioManager.Instance != null)

@@ -248,6 +248,7 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1;
         PauseUI.SetActive(false);
+        AudioManager.Instance.Stop();
         GameManager.Instance.ReturnToMainMenu();
     }
 
