@@ -25,6 +25,7 @@ public class FailLevelAnimations : MonoBehaviour {
         onAnimationComplete = onComplete; 
 
         DetectTiles();
+        HideAllPlates();
         AnimateTilesFalling();
     }
 
@@ -34,6 +35,15 @@ public class FailLevelAnimations : MonoBehaviour {
         else
             allTiles = manualTiles;
             Debug.Log($"using {allTiles.Length} manually assigned tiles");
+    }
+
+    void HideAllPlates()
+    {
+        PressurePlate[] plates = FindObjectsByType<PressurePlate>(FindObjectsSortMode.None);
+        CrossPressurePlate[] crossPlates = FindObjectsByType<CrossPressurePlate>(FindObjectsSortMode.None);
+
+        foreach (var p in plates) p.gameObject.SetActive(false);
+        foreach (var cp in crossPlates) cp.gameObject.SetActive(false);
     }
 
     void AnimateTilesFalling() {
