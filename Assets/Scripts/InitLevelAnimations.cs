@@ -29,6 +29,7 @@ public class InitLevelAnimations : MonoBehaviour {
         DetectTilesInLayer(TILES_LAYER);
         AnimateTilesRising();
         AnimatePlayerAppearance();
+        StartCoroutine(HandlePlatesAppearance());
     }
 
     private void DetectTilesInLayer(string NameOfLayer) {
@@ -78,6 +79,22 @@ public class InitLevelAnimations : MonoBehaviour {
         //show player ONLY after tiles finish
         float totalDelay = longestAnimationTime + delayBeforePlayer;
         playerAnimator.ShowAfterDelay(totalDelay);
+    }
+
+    IEnumerator HandlePlatesAppearance()
+    {
+        PressurePlate[] plates = FindObjectsByType<PressurePlate>(FindObjectsSortMode.None);
+        CrossPressurePlate[] crossPlates = FindObjectsByType<CrossPressurePlate>(FindObjectsSortMode.None);
+
+        //hide them immediately
+        foreach (var p in plates) p.gameObject.SetActive(false);
+        foreach (var cp in crossPlates) cp.gameObject.SetActive(false);
+
+        //wait until tiles are done rising
+        yield return new WaitForSeconds(longestAnimationTime);
+
+        foreach (var p in plates) p.gameObject.SetActive(true);
+        foreach (var cp in crossPlates) cp.gameObject.SetActive(true);
     }
 
     void Update() {

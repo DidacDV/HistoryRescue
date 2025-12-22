@@ -151,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   nextLevelScene: Level10Scene
   currentTheme: {fileID: 11400000, guid: 8e84f661f79ceb84aaec345402111a74, type: 2}
-  backgroundMusic: {fileID: 0}
+  backgroundMusic: {fileID: 8300000, guid: 766c03b0a1b114e4faa2225783b13e4c, type: 3}
   playerCube: {fileID: 1176157292}
   initAnimation: {fileID: 1231472761}
   failAnimation: {fileID: 367915369}
