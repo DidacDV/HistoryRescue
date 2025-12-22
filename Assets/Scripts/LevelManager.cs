@@ -5,11 +5,12 @@ using System.Diagnostics;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public string nextLevelScene; //name of next level scene
-    public LevelTheme currentTheme; //NULL if the current level keeps the same font, otherwise the new font to be set in the UI
+    public string nextLevelScene;
+    public LevelTheme currentTheme; 
 
     public AudioClip backgroundMusic;
     public PlayerController playerCube;
@@ -28,7 +29,9 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        AudioManager.Instance.Stop();
         musicController = UnityEngine.Object.FindAnyObjectByType<BackgroundMusicController>();
+
 
         if (musicController == null)
             UnityEngine.Debug.LogError("Still can't find BackgroundMusicController in the scene!");
@@ -40,6 +43,8 @@ public class LevelManager : MonoBehaviour
         {
             playerCube.OnFellOff.AddListener(OnPlayerFailed);
             playerCube.OnReachedVictoryHole.AddListener(OnPlayerSucceeded);
+            if (playerCube != null && currentTheme.rollSounds != null)
+                playerCube.SetThemeAudio(currentTheme.rollSounds);
         }
         else
             UnityEngine.Debug.LogError("player not set in level manager");
@@ -75,21 +80,23 @@ public class LevelManager : MonoBehaviour
             {
                 source.clip = backgroundMusic;
                 source.loop = true;
-                // DEBUG: Check if clip assigned
-                UnityEngine.Debug.Log($"[Music] Clip assigned: {source.clip.name}");
             }
             musicController.PlayMusic();
-            // DEBUG: Check if playing
-            UnityEngine.Debug.Log($"[Music] IsPlaying: {source.isPlaying}");
         }
 
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelStart);
+            AudioManager.Instance.Play(AudioManager.Instance.levelStart, 0.35f);
 
         if (introVoiceClip != null)
         {
-            AudioManager.Instance.Play(introVoiceClip);
-            UIManager.Instance.ShowAutoSubtitles(introFullText, introVoiceClip.length);
+            string sceneName = SceneManager.GetActiveScene().name;
+
+            if (!GameManager.Instance.HasSeenSubtitle(sceneName))
+            {
+                AudioManager.Instance.PlayVoice(introVoiceClip);
+                UIManager.Instance.ShowAutoSubtitles(introFullText, introVoiceClip.length);
+                GameManager.Instance.MarkSubtitleAsSeen(sceneName);
+            }
         }
 
         PlayInitialAnimation();
@@ -98,10 +105,11 @@ public class LevelManager : MonoBehaviour
 
     void OnPlayerFailed()
     {
+
         if (musicController != null)
             musicController.StopMusic();
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelFail);
+            AudioManager.Instance.Play(AudioManager.Instance.levelFail, 0.35f);
         if (failAnimation != null)
             failAnimation.LevelFailAnimation(GameManager.Instance.LevelFailed);
         else
@@ -113,7 +121,7 @@ public class LevelManager : MonoBehaviour
         if (musicController != null)
             musicController.StopMusic();
         if (AudioManager.Instance != null)
-            AudioManager.Instance.Play(AudioManager.Instance.levelPass);
+            AudioManager.Instance.Play(AudioManager.Instance.levelPass, 0.35f);
         if (passAnimation != null)
             passAnimation.PassLevelAnimation(() => GameManager.Instance.LevelPassed(nextLevelScene)); //lambda needed 
         else

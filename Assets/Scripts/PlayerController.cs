@@ -1,6 +1,7 @@
 using System;
 using System.Collections; 
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -22,9 +23,8 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     LayerMask layerMask; 			// LayerMask to detect raycast hits with ground tiles only
 
+    public AudioSource playerAudioSource;
     public AudioClip[] sounds; 		// Sounds to play when the cube rotates
-    public AudioClip fallSound; 	// Sound to play when the cube starts falling
-    public AudioClip victorySound;  // Sound to play when level is passed
 
     public UnityEvent OnFellOff;
     public UnityEvent OnReachedVictoryHole;
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     public float landingGraceTime = 0.1f;
     public bool IsInLandingGrace { get; private set; }
-    public bool IsRolling { get { return isRolling; } }
+    public bool IsRolling() { return isRolling; }
     public bool IsFalling { get { return bFalling; } }
 
     bool isGrounded()
@@ -60,7 +60,15 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             bool isGroundLayer = ((1 << hit.collider.gameObject.layer) & layerMask) != 0;
             BreakingTileSimple bTile = hit.collider.GetComponentInParent<BreakingTileSimple>();
             bool isValidBreakingTile = bTile != null && !bTile.IsBroken;
-            bool isButton = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
+            bool isCross = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
+            bool isCircle = hit.collider.GetComponentInParent<PressurePlate>() != null;
+
+            bool isButton = isCross || isCircle;
+            bool isVictoryHole = hit.collider.CompareTag("LevelPass");
+            if (isVictoryHole && !IsStandingUpright())
+            {
+                return true;  //can walk on victory hole, just can't fall in
+            }
 
             return isGroundLayer || isValidBreakingTile || isButton;
         }
@@ -122,24 +130,17 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
         }
 
-        // FINAL CHECK:
-
-        // If the cube is positioned completely over the LevelPass object (4 hits), 
-        // it must be safe, regardless of other tiles.
         if (victoryHits == 4)
         {
             Debug.Log("Move is safe: Landing perfectly on Victory Hole.");
             return true;
         }
 
-        // If we rely on solid ground, all four corner rays must hit solid ground or the LevelPass object.
         if (validHits == 4)
         {
             Debug.Log("Move is safe: Landing on solid ground.");
             return true;
         }
-
-        // If we didn't meet the 4-hit requirement, the move is unsafe.
         return false;
     }
 
@@ -166,6 +167,14 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             ghostCol.isTrigger = true;
             ghostObj.SetActive(true);
         }
+        playerAudioSource = GetComponent<AudioSource>();
+        if (playerAudioSource == null)
+        {
+            playerAudioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        playerAudioSource.playOnAwake = false;
+        playerAudioSource.spatialBlend = 0f; //2d
     }
 
     void Start()
@@ -230,7 +239,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                 if (!bLevelPassed)
                 {
                     bFalling = true;
-                    if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
                 }
                 return;
             }
@@ -313,7 +321,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
         }
 
-        if (fallSound) AudioSource.PlayClipAtPoint(fallSound, transform.position, 1.5f);
     }
 
     // Check if we're over the victory hole and in correct position
@@ -329,7 +336,6 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
                     Debug.Log("CORRECT POSITION! Falling into victory hole");
                     bFalling = true;
                     bLevelPassed = true;
-                    if (victorySound != null) { } // AudioSource.PlayClipAtPoint(victorySound, transform.position, 1.5f);
                 }
             }
         }
@@ -418,27 +424,19 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
         pivot.position = pivotPosition;
 
-        // 1. Setup the ghost to check the FINAL position/rotation
         CopyTransformData(transform, ghostPlayer);
-
-        // Rotate the ghost 90 degrees to simulate the final landing spot
         ghostPlayer.RotateAround(pivotPosition, axis, angle);
 
         Physics.SyncTransforms();
 
-        // 2. Perform the PRE-ROLL SAFETY CHECK on the final ghost position
         bool isSafe = IsMoveSafe(ghostPlayer);
         if (!isSafe)
         {
-            // Log the failure, but continue the roll animation.
             Debug.LogWarning("Pre-Roll FAILURE detected! Final landing is unstable. Roll will proceed and commit to fall mid-way.");
         }
 
-        // Safety check passed: store final ghost state for perfect snapping later
         Quaternion finalRotation = ghostPlayer.rotation;
         Vector3 finalPos = ghostPlayer.position;
-
-        // Restore the ghost back to original state to prevent issues if it's reused
         CopyTransformData(transform, ghostPlayer);
 
         float elapsedTime = 0f;
@@ -447,6 +445,8 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         UIManager.Instance.IncrementMovement();
         isRolling = true;
         bCommitToFall = false;
+
+        PlayRollSound();
 
         while (elapsedTime < rollDuration)
         {
@@ -467,38 +467,29 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             yield return null;
         }
 
-        // 3. Post-Roll Snapping: Use the pre-calculated final state for perfect snap
-
-        // Snap rotation
         transform.rotation = finalRotation;
+        Physics.SyncTransforms();
 
-        // Snap position (using the pre-calculated finalPos)
+        float halfHeight = m_Collider.bounds.extents.y;
+
         float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
         float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
 
-        // Recalculate current height based on final rotation to handle rotation changes
-        float currentHeight = 1.0f;
-        Vector3 size = transform.lossyScale;
+        float surfaceY = 0f;
+        RaycastHit hit;
+        Vector3 checkPos = new Vector3(snappedX, 2f, snappedZ); 
 
-        if (Mathf.Abs(Vector3.Dot(transform.right, Vector3.up)) > 0.9f) currentHeight = size.x;
-        else if (Mathf.Abs(Vector3.Dot(transform.up, Vector3.up)) > 0.9f) currentHeight = size.y;
-        else if (Mathf.Abs(Vector3.Dot(transform.forward, Vector3.up)) > 0.9f) currentHeight = size.z;
+        if (Physics.Raycast(checkPos, Vector3.down, out hit, 10f, layerMask))
+        {
+            surfaceY = hit.collider.bounds.max.y;
+        }
 
-        transform.position = new Vector3(snappedX, currentHeight / 2f, snappedZ);
+        transform.position = new Vector3(snappedX, surfaceY + halfHeight, snappedZ);
+        Physics.SyncTransforms();
+
         isRolling = false;
 
         CheckVictoryHole();
-
-        RaycastHit groundHit;
-        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out groundHit, 1.5f))
-        {
-            BreakingTileSimple bTile = groundHit.collider.GetComponentInParent<BreakingTileSimple>();
-            if (bTile != null)
-            {
-                bTile.TriggerBreak(this);
-            }
-        }
-
         StartCoroutine(LandingGrace());
     }
 
@@ -514,6 +505,21 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
         target.position = source.position;
         target.rotation = source.rotation;
         target.localScale = source.localScale;
+    }
+
+    public void SetThemeAudio(AudioClip[] rollSounds)
+    {
+        if (rollSounds != null)
+            sounds = rollSounds;
+    }
+
+    void PlayRollSound()
+    {
+        if (sounds == null || sounds.Length == 0) return;
+
+        AudioClip clip = sounds[UnityEngine.Random.Range(0, sounds.Length)];
+        playerAudioSource.pitch = UnityEngine.Random.Range(0.65f, 0.95f);
+        playerAudioSource.PlayOneShot(clip, 0.35f);
     }
 
 }

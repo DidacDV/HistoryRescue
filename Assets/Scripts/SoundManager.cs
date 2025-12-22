@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip levelPass;
 
     private AudioSource audioSource;
+    private AudioSource voiceSource;
 
     void Awake()
     {
@@ -17,7 +19,20 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            audioSource = GetComponent<AudioSource>();
+
+            AudioSource[] sources = GetComponents<AudioSource>();
+
+            if (sources.Length >= 2)
+            {
+                audioSource = sources[0];
+                voiceSource = sources[1];
+            }
+            else
+            {
+                audioSource = GetComponent<AudioSource>();
+                voiceSource = gameObject.AddComponent<AudioSource>();
+                voiceSource.volume = 0.6f;
+            }
         }
         else
         {
@@ -25,9 +40,34 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(AudioClip clip)
+    public void Play(AudioClip clip, float volumeScale = 0f)
     {
         if (clip != null)
-            audioSource.PlayOneShot(clip);
+            if (volumeScale != 0f)
+                audioSource.PlayOneShot(clip, volumeScale);
+            else audioSource.PlayOneShot(clip);
+    }
+
+    public void PlayVoice(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (voiceSource != null && voiceSource.isPlaying)
+            voiceSource.Stop();
+
+        voiceSource.clip = clip;
+        voiceSource.Play();
+    }
+
+    public void Stop()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+        if (voiceSource != null)
+        {
+            voiceSource.Stop();
+        }
     }
 }

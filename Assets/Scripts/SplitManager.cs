@@ -16,14 +16,25 @@ public class SplitManager : MonoBehaviour, ISwitchListener
 {
     public PlayerController playerController;
     public GameObject segmentPrefab;
+    public GameObject shieldVfxPrefab;
+    public float shieldDuration = 1.0f;
     public InputActionReference swapAction;
     [SerializeField] private List<SplitGroup> splitGroups = new List<SplitGroup>();
+
+    [Header("First Split Voice & Subtitles")]
+    public bool showSubtitleOnFirstSplit = false;
+    public AudioClip splitVoiceClip;
+    [TextArea(3, 10)]
+    public string splitSubtitleText;
+    [SerializeField] private AudioClip swapSound;
 
     private Dictionary<ISwitchSource, SplitGroup> sourceToGroupMap = new Dictionary<ISwitchSource, SplitGroup>();
     private bool isSplit = false;
     private GameObject segment1, segment2;
     private PlayerSegmentController segment1Controller, segment2Controller;
     private GameObject currentControlledSegment;
+
+    private bool hasPlayedSplitSubtitle = false;
 
     void Awake()
     {
@@ -76,11 +87,9 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         if (segment1.TryGetComponent(out Rigidbody rb1)) { rb1.position = p1; rb1.linearVelocity = Vector3.zero; }
         if (segment2.TryGetComponent(out Rigidbody rb2)) { rb2.position = p2; rb2.linearVelocity = Vector3.zero; }
 
-        // GET COMPONENTS FIRST
         segment1Controller = segment1.GetComponent<PlayerSegmentController>();
         segment2Controller = segment2.GetComponent<PlayerSegmentController>();
 
-        // NOW REGISTER THEM (They aren't null anymore)
         LevelManager levelMan = UnityEngine.Object.FindAnyObjectByType<LevelManager>();
         if (levelMan != null)
         {
@@ -94,11 +103,17 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         segment2Controller.SetControl(false);
         currentControlledSegment = segment1;
 
+        TriggerShieldVFX(currentControlledSegment);
+
+        if (showSubtitleOnFirstSplit && !hasPlayedSplitSubtitle)
+        {
+            PlaySplitSubtitle();
+        }
         playerController.gameObject.SetActive(false);
         isSplit = true;
     }
 
-    void Update(){ if (isSplit) CheckForReconstitution();}
+    void Update() { if (isSplit) CheckForReconstitution(); }
 
     private void OnSwapPerformed(InputAction.CallbackContext context) { if (isSplit) SwapControl(); }
 
@@ -108,6 +123,11 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         segment1Controller.SetControl(!isSeg1);
         segment2Controller.SetControl(isSeg1);
         currentControlledSegment = isSeg1 ? segment2 : segment1;
+        if (swapSound != null)
+        {
+            AudioManager.Instance.Play(swapSound);
+        }
+        TriggerShieldVFX(currentControlledSegment);
     }
 
     void CheckForReconstitution()
@@ -132,5 +152,29 @@ public class SplitManager : MonoBehaviour, ISwitchListener
         playerController.ResetState();
         InputSystem.actions.FindActionMap("Player")?.Enable();
         isSplit = false;
+    }
+
+    private void TriggerShieldVFX(GameObject target)
+    {
+        if (shieldVfxPrefab == null || target == null) return;
+
+        GameObject vfx = Instantiate(shieldVfxPrefab, target.transform.position, Quaternion.identity, target.transform);
+        vfx.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        Destroy(vfx, shieldDuration);
+    }
+
+    private void PlaySplitSubtitle()
+    {
+        string key = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + "_SplitHint";
+
+        if (showSubtitleOnFirstSplit && !GameManager.Instance.HasSeenSubtitle(key))
+        {
+            if (splitVoiceClip != null)
+            {
+                AudioManager.Instance.PlayVoice(splitVoiceClip);
+                UIManager.Instance.ShowAutoSubtitles(splitSubtitleText, splitVoiceClip.length);
+                GameManager.Instance.MarkSubtitleAsSeen(key);
+            }
+        }
     }
 }

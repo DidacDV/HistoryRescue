@@ -26,6 +26,7 @@ public class PassLevelAnimations : MonoBehaviour {
         onAnimationComplete = onComplete;
 
         DetectTiles();
+        HideAllPlates();
         AnimateTilesFlyingAndSpinning();
     }
 
@@ -64,6 +65,14 @@ public class PassLevelAnimations : MonoBehaviour {
         enabled = true;
     }
 
+    void HideAllPlates()
+    {
+        PressurePlate[] plates = FindObjectsByType<PressurePlate>(FindObjectsSortMode.None);
+        CrossPressurePlate[] crossPlates = FindObjectsByType<CrossPressurePlate>(FindObjectsSortMode.None);
+
+        foreach (var p in plates) p.gameObject.SetActive(false);
+        foreach (var cp in crossPlates) cp.gameObject.SetActive(false);
+    }
     void Update() {
         if (!isAnimating) return;
 

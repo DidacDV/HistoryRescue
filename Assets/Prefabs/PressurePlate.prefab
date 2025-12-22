@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 9113043229559834933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.473, y: -0.076, z: 5.503}
-  m_LocalScale: {x: 0.47131976, y: 0.054559242, z: 0.5407259}
+  m_LocalPosition: {x: 8.5, y: -0.076, z: 5.5}
+  m_LocalScale: {x: 0.7252833, y: 0.054559242, z: 0.7666297}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9113043229559834933}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &3980942493538762651
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -111,8 +111,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4373631, y: 8.853409, z: 1.3175313}
-  m_Center: {x: -0.06485252, y: 3.926698, z: -0.055953152}
+  m_Size: {x: 1.0788432, y: 9.254462, z: 1.0686296}
+  m_Center: {x: 0.012502142, y: 4.1272187, z: -0.028658103}
 --- !u!114 &4774017656532866679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   pressDepth: 0.15
   animDuration: 0.2
+  pressSound: {fileID: 8300000, guid: ecaa3bae80c985c45ad56f08f02d09b9, type: 3}
 --- !u!95 &4058136460974074199
 Animator:
   serializedVersion: 7
