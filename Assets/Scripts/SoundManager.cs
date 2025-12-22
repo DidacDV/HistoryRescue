@@ -24,7 +24,7 @@ public class AudioManager : MonoBehaviour
 
             if (sources.Length >= 2)
             {
-                audioSource = sources[0]; 
+                audioSource = sources[0];
                 voiceSource = sources[1];
             }
             else
@@ -50,10 +50,22 @@ public class AudioManager : MonoBehaviour
     {
         if (clip == null) return;
 
-        if (voiceSource != null && voiceSource.isPlaying) 
+        if (voiceSource != null && voiceSource.isPlaying)
             voiceSource.Stop();
 
         voiceSource.clip = clip;
         voiceSource.Play();
+    }
+
+    public void Stop()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+        if (voiceSource != null)
+        {
+            voiceSource.Stop();
+        }
     }
 }
