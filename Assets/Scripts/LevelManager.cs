@@ -29,7 +29,9 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        AudioManager.Instance.Stop();
         musicController = UnityEngine.Object.FindAnyObjectByType<BackgroundMusicController>();
+
 
         if (musicController == null)
             UnityEngine.Debug.LogError("Still can't find BackgroundMusicController in the scene!");
