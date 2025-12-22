@@ -235,7 +235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -315,7 +315,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -913,7 +913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -993,7 +993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -1149,7 +1149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -1230,7 +1230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -1497,7 +1497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -1643,7 +1643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -1931,7 +1931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -2012,7 +2012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -2097,7 +2097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -2258,7 +2258,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.0408826
+      value: 1.066176
       objectReference: {fileID: 0}
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.z
@@ -2310,7 +2310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -2579,7 +2579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -2762,11 +2762,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &743379843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3159,6 +3156,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AncientPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 7972835290445703987, guid: 0d6c5730f190f084bab2fca1d382a3b7, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3303,7 +3304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -3407,11 +3408,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &968052996 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -3503,11 +3501,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1015636638 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -3538,11 +3533,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1030521347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3605,7 +3597,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -3681,7 +3673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -3860,7 +3852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -3940,7 +3932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -4219,7 +4211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -4257,11 +4249,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1176157291
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,7 +4531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -4618,7 +4607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -4722,11 +4711,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1373378076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4813,11 +4799,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1400857462 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -4838,11 +4821,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1412168844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4901,7 +4881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -4939,11 +4919,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1468002500 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5077,7 +5054,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -5115,11 +5092,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1561522637 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5150,11 +5124,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1595880221 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5175,11 +5146,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1595948761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5308,7 +5276,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -5446,11 +5414,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &1674739271 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5476,11 +5441,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &1699669239 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5501,11 +5463,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &1704802074 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5526,11 +5485,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1726449637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5589,7 +5545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -5627,11 +5583,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1739997846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5690,7 +5643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -5728,11 +5681,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1793004093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5881,11 +5831,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1840796008 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -5906,11 +5853,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &1842709727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6210,11 +6154,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &1941533618 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6235,11 +6176,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &1947601238 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6260,11 +6198,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &1952377655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6327,7 +6262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -6403,7 +6338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -6441,11 +6376,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &2010353499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6466,11 +6398,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &2062273663 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6491,11 +6420,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &2089904756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6506,7 +6432,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.015
+      value: 1.0396645
       objectReference: {fileID: 0}
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.z
@@ -6558,7 +6484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -6662,11 +6588,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &2112178471 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6687,11 +6610,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1 &2120907388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8667976098196884499, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6712,11 +6632,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!4 &2136220590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
@@ -6737,11 +6654,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &2140484066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6752,7 +6666,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.015
+      value: 1.0396645
       objectReference: {fileID: 0}
     - target: {fileID: 6421295701181047188, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_LocalScale.z
@@ -6804,7 +6718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y
@@ -6842,11 +6756,8 @@ MonoBehaviour:
   breakDelay: 0.15
   tweakDistance: -0.05
   tweakDuration: 0.08
-  uprightHeightThreshold: 1
-  playerGroundCheckDistance: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  detectionRadius: 0.5
+  detectionHeight: 2
 --- !u!1001 &2143442473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6971,7 +6882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116855589924159076, guid: a333c0d5a2bc1f24b8576e19f0afe729, type: 3}
       propertyPath: m_Center.y

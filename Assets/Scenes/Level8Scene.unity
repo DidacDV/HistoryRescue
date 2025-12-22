@@ -202,7 +202,7 @@ MonoBehaviour:
   splitSubtitleText: You have used the new molecular split technology. Press the
     space bar to change between segments. Put them side by side to reconstitute your
     original form.
-  swapSound: {fileID: 0}
+  swapSound: {fileID: 8300000, guid: 5bd59ed7736d8172e866efe132ef758a, type: 3}
 --- !u!1001 &15588301
 PrefabInstance:
   m_ObjectHideFlags: 0

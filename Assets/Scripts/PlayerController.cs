@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
     public float landingGraceTime = 0.1f;
     public bool IsInLandingGrace { get; private set; }
-    public bool IsRolling { get { return isRolling; } }
+    public bool IsRolling() { return isRolling; }
     public bool IsFalling { get { return bFalling; } }
 
     bool isGrounded()
@@ -130,24 +130,17 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             }
         }
 
-        // FINAL CHECK:
-
-        // If the cube is positioned completely over the LevelPass object (4 hits), 
-        // it must be safe, regardless of other tiles.
         if (victoryHits == 4)
         {
             Debug.Log("Move is safe: Landing perfectly on Victory Hole.");
             return true;
         }
 
-        // If we rely on solid ground, all four corner rays must hit solid ground or the LevelPass object.
         if (validHits == 4)
         {
             Debug.Log("Move is safe: Landing on solid ground.");
             return true;
         }
-
-        // If we didn't meet the 4-hit requirement, the move is unsafe.
         return false;
     }
 
@@ -431,27 +424,19 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
 
         pivot.position = pivotPosition;
 
-        // 1. Setup the ghost to check the FINAL position/rotation
         CopyTransformData(transform, ghostPlayer);
-
-        // Rotate the ghost 90 degrees to simulate the final landing spot
         ghostPlayer.RotateAround(pivotPosition, axis, angle);
 
         Physics.SyncTransforms();
 
-        // 2. Perform the PRE-ROLL SAFETY CHECK on the final ghost position
         bool isSafe = IsMoveSafe(ghostPlayer);
         if (!isSafe)
         {
-            // Log the failure, but continue the roll animation.
             Debug.LogWarning("Pre-Roll FAILURE detected! Final landing is unstable. Roll will proceed and commit to fall mid-way.");
         }
 
-        // Safety check passed: store final ghost state for perfect snapping later
         Quaternion finalRotation = ghostPlayer.rotation;
         Vector3 finalPos = ghostPlayer.position;
-
-        // Restore the ghost back to original state to prevent issues if it's reused
         CopyTransformData(transform, ghostPlayer);
 
         float elapsedTime = 0f;
@@ -482,46 +467,29 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             yield return null;
         }
 
-        // Snap rotation
         transform.rotation = finalRotation;
         Physics.SyncTransforms();
 
-        // Use the collider's actual size after rotation for accurate height
         float halfHeight = m_Collider.bounds.extents.y;
 
-        // Snap position (using the pre-calculated finalPos)
         float snappedX = Mathf.Round(finalPos.x * 2) / 2f;
         float snappedZ = Mathf.Round(finalPos.z * 2) / 2f;
 
-        // Find the tile surface below
         float surfaceY = 0f;
         RaycastHit hit;
-        Vector3 checkPos = new Vector3(snappedX, 2f, snappedZ); // Start from above
+        Vector3 checkPos = new Vector3(snappedX, 2f, snappedZ); 
 
         if (Physics.Raycast(checkPos, Vector3.down, out hit, 10f, layerMask))
         {
-            // Get the TOP of the tile collider
             surfaceY = hit.collider.bounds.max.y;
         }
 
-        // Place cube so its bottom sits on the surface
         transform.position = new Vector3(snappedX, surfaceY + halfHeight, snappedZ);
         Physics.SyncTransforms();
 
         isRolling = false;
 
         CheckVictoryHole();
-
-        RaycastHit groundHit;
-        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out groundHit, 1.5f))
-        {
-            BreakingTileSimple bTile = groundHit.collider.GetComponentInParent<BreakingTileSimple>();
-            if (bTile != null)
-            {
-                bTile.TriggerBreak(this);
-            }
-        }
-
         StartCoroutine(LandingGrace());
     }
 
