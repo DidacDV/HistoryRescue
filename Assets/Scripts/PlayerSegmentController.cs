@@ -12,6 +12,8 @@ public class PlayerSegmentController : MonoBehaviour
     
     public float rotSpeed = 360f;
     public float fallSpeed = 5f;
+    [Header("Fall Settings")]
+    public float synchronizedFallDelay = 0.5f;
     public LayerMask layerMask;
     public UnityEvent OnFellOff;
     private bool hasControl = false;
@@ -24,6 +26,20 @@ public class PlayerSegmentController : MonoBehaviour
     public void SetControl(bool controlStatus)
     {
         hasControl = controlStatus;
+    }
+
+    public void ForceFall(float delay)
+    {
+        if (bFalling) return;
+        StartCoroutine(FallRoutine(delay));
+    }
+
+    private IEnumerator FallRoutine(float delay)
+    {
+        hasControl = false;
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+        bFalling = true;
     }
 
     void Awake()
@@ -114,7 +130,29 @@ public class PlayerSegmentController : MonoBehaviour
 
         if (!Physics.Raycast(transform.position, Vector3.down, distToGround + 0.5f, layerMask))
         {
-            bFalling = true;
+            if (!bFalling)
+            {
+                bFalling = true;
+                if (OtherSegment == null)
+                {
+                    var allSegments = FindObjectsByType<PlayerSegmentController>(FindObjectsSortMode.None);
+                    foreach (var seg in allSegments)
+                    {
+                        if (seg != this)
+                        {
+                            OtherSegment = seg.transform;
+                            break;
+                        }
+                    }
+                }
+
+                if (OtherSegment != null)
+                {
+                    PlayerSegmentController otherCtrl = OtherSegment.GetComponent<PlayerSegmentController>();
+                    if (otherCtrl != null)
+                        otherCtrl.ForceFall(synchronizedFallDelay); 
+                }
+            }
         }
     }
 
