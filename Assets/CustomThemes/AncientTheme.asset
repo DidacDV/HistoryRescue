@@ -23,5 +23,4 @@ MonoBehaviour:
   rollSounds:
   - {fileID: 8300000, guid: dab3b172573183b4ebb1202466cc920b, type: 3}
   - {fileID: 8300000, guid: 3a4a6713f3a65074fb9986e32f9051c5, type: 3}
-  - {fileID: 8300000, guid: d200f8b1528f5a3439f4a7a971e3f0a1, type: 3}
-  - {fileID: 8300000, guid: 2b819081f65ff194881c19630828cf3d, type: 3}
+  - {fileID: 8300000, guid: 61f73082b324d634685596543dbb58ae, type: 3}
