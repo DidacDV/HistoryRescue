@@ -13,6 +13,9 @@ public class CrossPressurePlate : BaseSwitch
     [SerializeField] private float pressDepth = 0.15f;
     [SerializeField] private float animDuration = 0.2f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip pressSound;
+
     [Header("Standing Check")]
     [SerializeField] private bool requiresUprightStance = true;
 
@@ -80,6 +83,10 @@ public class CrossPressurePlate : BaseSwitch
             {
                 wasPressed = true;
                 AnimateDown();
+                if (pressSound != null)
+                {
+                    AudioManager.Instance.Play(pressSound);
+                }
             }
             Toggle();
         }

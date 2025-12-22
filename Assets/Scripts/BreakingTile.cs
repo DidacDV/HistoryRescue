@@ -18,9 +18,6 @@ public class BreakingTileSimple : MonoBehaviour
     public float playerGroundCheckDistance = 0.15f;
     public LayerMask groundLayer = 0;
 
-    [Header("Visuals")]
-    public Color alertColor = new Color(1f, 0.5f, 0f, 1f);
-
     Renderer _renderer;
 
     Collider _col;
@@ -37,12 +34,6 @@ public class BreakingTileSimple : MonoBehaviour
         {
             enabled = false;
             return;
-        }
-
-        _renderer = GetComponent<Renderer>();
-        if (_renderer != null && _renderer.material != null)
-        {
-            _renderer.material.color = alertColor;
         }
 
         _initialLocalPos = transform.localPosition;

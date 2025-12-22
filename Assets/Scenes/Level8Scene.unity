@@ -202,6 +202,7 @@ MonoBehaviour:
   splitSubtitleText: You have used the new molecular split technology. Press the
     space bar to change between segments. Put them side by side to reconstitute your
     original form.
+  swapSound: {fileID: 8300000, guid: 5bd59ed7736d8172e866efe132ef758a, type: 3}
 --- !u!1001 &15588301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3461,55 +3462,59 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 2202256909239239943, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fc0654223cdc5d94cbfed92f9939b3c0, type: 2}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5000904
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.08995073
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalPosition.z
       value: 1.4999398
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.0000037691207
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0.000015060999
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.000024633728
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: -0.002
       objectReference: {fileID: 0}
-    - target: {fileID: 7470848571516371681, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 7470848571516371681, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.003
       objectReference: {fileID: 0}
-    - target: {fileID: 8381091475538720733, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+    - target: {fileID: 8381091475538720733, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
       propertyPath: m_Name
-      value: CrossPressurePlate
+      value: SplitPlate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
 --- !u!1001 &1395148384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3908,7 +3913,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1485890909 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4435740034103117596, guid: ef5a7a095d45ffd42806b14dd41afa62, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4435740034103117596, guid: b695bd377a422684a8ac49ea227158d2, type: 3}
   m_PrefabInstance: {fileID: 1358714177}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
