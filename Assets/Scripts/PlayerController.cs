@@ -60,8 +60,10 @@ public class PlayerController : MonoBehaviour, BreakingTileSimple.IStandingCheck
             bool isGroundLayer = ((1 << hit.collider.gameObject.layer) & layerMask) != 0;
             BreakingTileSimple bTile = hit.collider.GetComponentInParent<BreakingTileSimple>();
             bool isValidBreakingTile = bTile != null && !bTile.IsBroken;
-            bool isButton = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
+            bool isCross = hit.collider.GetComponentInParent<CrossPressurePlate>() != null;
+            bool isCircle = hit.collider.GetComponentInParent<PressurePlate>() != null;
 
+            bool isButton = isCross || isCircle;
             bool isVictoryHole = hit.collider.CompareTag("LevelPass");
             if (isVictoryHole && !IsStandingUpright())
             {
